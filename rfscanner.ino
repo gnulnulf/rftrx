@@ -25,14 +25,18 @@ void appendAndParse(String &dest, int channel, long d);
 void serialEvent();
 int decode(String &frame);
 
-#define BVERSION "201509"
+#define BVERSION "20151009"
+
 #define RECEIVER1 "433A"
 #define RECEIVER1_DATA 19
 #define RECEIVER1_VCC 16
+#define RECEIVER1_GAIN 21
 
 #define RECEIVER2 "868A"
 #define RECEIVER2_DATA 2
 #define RECEIVER2_VCC 4
+#define RECEIVER2_GAIN 5
+
 
 #define RECEIVER3 "IR38"
 #define RECEIVER3_DATA 18
@@ -49,6 +53,7 @@ int decode(String &frame);
 
 #define FRAMESIZE 250
 #define MIN_FRAMESIZE 24
+#define SPACELEN_TOLERANCE 5
 
 RFtrx myrf = RFtrx();
 
@@ -106,15 +111,21 @@ D26, D27, D28, D29. Als je deze lijnen resp. H,L,L,L maakt, dan zal de software 
       pinMode(22,OUTPUT);
       digitalWrite(22,HIGH);
 pinMode(13, OUTPUT);
-pinMode(14, OUTPUT);
-pinMode(15, OUTPUT);
-pinMode(16, OUTPUT);
-digitalWrite(14,LOW); //tx data 0
-digitalWrite(15,LOW); //tx off
-digitalWrite(16,LOW); //receiver1 on
 
-digitalWrite(16,HIGH); //receiver1 off
-digitalWrite(4,HIGH); //receiver2 off
+pinMode(TRANSMITTER1_VCC, OUTPUT);
+pinMode(TRANSMITTER1_DATA, OUTPUT);
+
+pinMode(RECEIVER1_VCC, OUTPUT);
+pinMode(RECEIVER1_GAIN, OUTPUT);
+
+pinMode(RECEIVER2_VCC, OUTPUT);
+pinMode(RECEIVER2_GAIN, OUTPUT);
+
+digitalWrite(TRANSMITTER1_DATA,LOW); //tx data 0
+digitalWrite(TRANSMITTER1_VCC,LOW); //tx off
+
+digitalWrite(RECEIVER1_VCC,HIGH); //receiver1 on
+digitalWrite(RECEIVER2_VCC,HIGH); //receiver2 on
 
 
 
@@ -126,10 +137,10 @@ digitalWrite(4,HIGH); //receiver2 off
 //pinMode(11, OUTPUT);
 //pinMode(14, OUTPUT);
 //pinMode(15, OUTPUT);
-pinMode(2, INPUT_PULLUP);
-pinMode(18, INPUT_PULLUP);
-pinMode(19, INPUT_PULLUP);
-//pinMode(19, INPUT);
+
+pinMode(RECEIVER1_DATA, INPUT_PULLUP);
+pinMode(RECEIVER2_DATA, INPUT_PULLUP);
+pinMode(RECEIVER3_DATA, INPUT_PULLUP);
 
 //Board	        int.0	int.1	int.2	int.3	int.4	int.5
 //Uno, Ethernet	2	3	 	 	 	 
@@ -159,8 +170,10 @@ if ( myrf.dataready(chan) ) {
   returnstr="";
    appendAndParse( returnstr ,chan , myrf.getNext(chan) );
     if ( returnstr != "" ) {
-           Serial.println(returnstr);    
        		int ret= decode(returnstr);
+	if ( ret == 0 ) {
+           Serial.println(returnstr);    
+}
           returnstr="";  
 	 
     }
@@ -228,6 +241,9 @@ int decode(String &frame) {
   // count pulselengths to find the high and low values
   int pulses[16];
 
+	//the most common pulse is probably the spacer
+	int commonPulse=0;
+
   for (int i = 0; i<16;i++) {
     pulses[i]=0;
   }
@@ -244,31 +260,79 @@ int decode(String &frame) {
     pulses[ c ]++;
   }
 }
-// if "1" is frameLen * 0.5 possibly spacelen / tristate
-// if "1" is frameLen > 0.5 possibly spacelen
 
 
 
 for (int i = 0; i<16;i++) {
   if ( pulses[i] > 0 ) {
+	if ( pulses[i] > pulses[commonPulse]) commonPulse=i;
   Serial.print( i );
   Serial.print( "=" );
   Serial.print( pulses[i] );
   Serial.print( "," );
   }
 }
-Serial.println( "" );
 
 
-Serial.print( "PULSETEST" );
-Serial.print( pulses[1] );
-Serial.print( "  "  );
-
-Serial.println( (dataLen -3)/2 );
+Serial.print( " common=" );
+Serial.println( commonPulse );
 
 
-if ( pulses[1] > ( (dataLen -3)/2) ) {
-  int oneData = frame.indexOf('1',startOfData);
+Serial.println( (dataLen - SPACELEN_TOLERANCE)/2 );
+
+
+// if more then half of the pulses have the same lenght it's probably a spacer
+if ( pulses[ commonPulse ] > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
+Serial.print( "spacelen test odd" );
+
+int oddCount=0;
+int evenCount=0;
+char commonChar;
+
+if ( commonPulse > 9) {
+	commonChar='A'+ commonPulse -10;
+} else {
+	commonChar='0'+ commonPulse ;
+	
+}
+  for (int i = 0; i<dataLen;i++) {
+    char c = frame.charAt( startOfData + i );
+	if (c == commonChar ){
+		if ( i & 1  ) {
+			oddCount++;
+		} else {
+			evenCount++;
+		}
+
+	}
+}
+int oddOffset=0;
+int spacelen=0;
+
+Serial.print( oddCount );
+Serial.print( " even " );
+
+Serial.println( evenCount );
+
+if ( evenCount > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
+Serial.println( "spacelen even" );
+	oddOffset=0;
+	spacelen=1;
+}
+if ( oddCount > ( (dataLen -SPACELEN_TOLERANCE)/2) ) {
+Serial.println( "spacelen odd" );
+	oddOffset=1;
+	spacelen=1;
+}
+
+if ( spacelen == 1 ) {
+      Serial.print( "SPACELEN with offset" );    
+      Serial.println( oddOffset ) ;    
+	
+
+}
+
+/*  int oneData = frame.indexOf(String(commonPulse,HEX),startOfData);
   int notzero=0;
   if ( oneData-startOfData < 4) { 
     for(int i=oneData;i<frameLen-1;i+=2){
@@ -284,6 +348,8 @@ if ( pulses[1] > ( (dataLen -3)/2) ) {
   
   
   }
+
+*/
 }
 
 
@@ -356,7 +422,6 @@ void serialEvent() {
 void appendAndParse(String &dest, int channel, long d) {
         dest="";
   	if ( d == 0 ) {
-		//if (( count[ channel ] > MIN_FRAMESIZE ) && ( count[channel]==176)) {
 		if (( count[ channel ] > MIN_FRAMESIZE ) ) {
 			long period=frame[ channel ][0];
 			long high=frame[ channel ][0];
@@ -373,24 +438,26 @@ void appendAndParse(String &dest, int channel, long d) {
 			avg /= count[ channel ];
 
 
-Serial.print("time:");
-Serial.print(period);
-Serial.print(":");
-Serial.print(avg);
-Serial.print(":");
-Serial.print(high);
-Serial.println(":");
-
 // indien er minder dan 10% 1-periods zijn zal dat wel fout zijn
 int countLow=0;
 for (int i=0;i<count[ channel ];i++) {
-	if ((( frame[ channel ][i] + period * 0.5 ) / period ) ==1 ) countLow++;
-
+        if ((( frame[ channel ][i] + period * 0.5 ) / period ) ==1 ) countLow++;
 }
 if (countLow< (count[channel] / 10)) {
+long lowAvg=0;
+int lowCount=0;
 Serial.println("LOW ERROR");
-	period*= 1.5;
+//      period*= 1.5;
+for (int i=0;i<count[ channel ];i++) {
+        if ( frame[ channel ][i]  < period * 2 ) {
+        lowAvg+= frame[ channel ][i];
+        lowCount++;
+        }
 }
+// use the average of the small
+period = lowAvg / lowCount;
+}
+
 
 
                         dest=">"+receiver[ channel ]+":"+count[ channel ]+":"+frame[ channel ][0]+":"+period+":";
