@@ -232,7 +232,7 @@ for (int chan=0;chan<3;chan++) {
 int decode(String &frame) {
   
   int state;
-  Serial.print("DECODE:");  
+//  Serial.print("DECODE:");  
 
   int frameLen = frame.length();
   int startOfData = frame.lastIndexOf(':') + 1; 
@@ -278,12 +278,13 @@ Serial.print( " common=" );
 Serial.println( commonPulse );
 
 
-Serial.println( (dataLen - SPACELEN_TOLERANCE)/2 );
+// needed pulses
+//Serial.println( (dataLen - SPACELEN_TOLERANCE)/2 );
 
 
 // if more then half of the pulses have the same lenght it's probably a spacer
 if ( pulses[ commonPulse ] > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
-Serial.print( "spacelen test odd" );
+//Serial.print( "spacelen test odd" );
 
 int oddCount=0;
 int evenCount=0;
@@ -309,10 +310,10 @@ if ( commonPulse > 9) {
 int oddOffset=0;
 int spacelen=0;
 
-Serial.print( oddCount );
-Serial.print( " even " );
+//Serial.print( oddCount );
+//Serial.print( " even " );
 
-Serial.println( evenCount );
+//Serial.println( evenCount );
 
 if ( evenCount > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
 Serial.println( "spacelen even" );
@@ -326,30 +327,63 @@ Serial.println( "spacelen odd" );
 }
 
 if ( spacelen == 1 ) {
-      Serial.print( "SPACELEN with offset" );    
-      Serial.println( oddOffset ) ;    
+   //   Serial.print( "SPACELEN with offset" );    
+    //  Serial.println( oddOffset ) ;    
+
+
+// temporary create strings to 
+String dumframe="";
+String dummatch="";
+for(int j=0;j<MIN_FRAMESIZE /2 ;j++) {
+	dummatch += commonChar;
+}
+ //     Serial.print( "SPACELEN dummatch" );    
+  //    Serial.println( dummatch ) ;    
+for(int j=startOfData + oddOffset ;j<dataLen;j+=2) {
+	dumframe += frame.charAt( j);
+}
+//      Serial.print( "SPACELEN dumframe" );    
+//      Serial.println( dumframe ) ;    
+
+int markerstart = dumframe.indexOf(dummatch) * 2;
+//      Serial.print( "SPACELEN markerstart" );    
+//      Serial.println( markerstart ) ;    
+
+if ( markerstart >=0 ) {
+String spacelenFrame="";
+String spacelenFrameInv="";
+for(int j=startOfData + oddOffset + markerstart ;j<dataLen;j+=2) {
+	if ( frame.charAt( j )  == commonChar ) { 
+		char c =  frame.charAt( j -1 ) ;
+		// ##FIXME
+		// will go wrong if both 0 and 1 are larger then the marker
+		if ( c > commonChar) {
+			spacelenFrame += '1';
+			spacelenFrameInv += '0';
+		} else {
+			spacelenFrame += '0';
+			spacelenFrameInv += '1';
+		}
+				
+	} else {
+		break;
+	}
 	
+}
+      Serial.print( ">SPACELENFRAME:" );    
+      Serial.print( spacelenFrame.length()) ;    
+      Serial.print( ":" );    
+      Serial.println( spacelenFrame ) ;    
+
+      Serial.print( ">SPACELENFRAMEINV:" );    
+      Serial.print( spacelenFrameInv.length()) ;    
+      Serial.print( ":" );    
+      Serial.println( spacelenFrameInv ) ;    
+
+
 
 }
-
-/*  int oneData = frame.indexOf(String(commonPulse,HEX),startOfData);
-  int notzero=0;
-  if ( oneData-startOfData < 4) { 
-    for(int i=oneData;i<frameLen-1;i+=2){
-      if (frame.charAt( i ) != '1' ) notzero=1;
-    }
-    if ( notzero = 0 ) {
-      Serial.println( "SPACELEN" );    
-    } else {
-      Serial.println( "TRISTATE?" );
-    }
-    
-  
-  
-  
-  }
-
-*/
+} //end_spacelen==1
 }
 
 
@@ -446,7 +480,7 @@ for (int i=0;i<count[ channel ];i++) {
 if (countLow< (count[channel] / 10)) {
 long lowAvg=0;
 int lowCount=0;
-Serial.println("LOW ERROR");
+//Serial.println("LOW ERROR");
 //      period*= 1.5;
 for (int i=0;i<count[ channel ];i++) {
         if ( frame[ channel ][i]  < period * 2 ) {

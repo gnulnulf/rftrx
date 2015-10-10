@@ -15,7 +15,12 @@ when a frame is received the following will happen:
 - detect lower encoding ( spacelen, 123spacelen, manchester, tristate )
 - based on the lower encoding, find the corresponding sender protocol.
 - validate based on zero-mask, one-mask, same-mask(s)
+	....----0101....----aa => 0101 should be an axact match
+	 all 'a's should be the same, all other chars are convenient for counting
 - decode and show as json, rflink, raw txt
+	the decode string should be something like:
+	----aaaabbccccccccccc--
+	this will create an associative array, probably with signing and crc etc.
 
 a frame could be send by sending  strings containing relative pulses and extra information like pulselength, repeats etc.
  
