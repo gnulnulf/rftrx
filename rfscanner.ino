@@ -17,6 +17,7 @@
  
 //class RFtrx;
 #include <RFtrx.h>
+#include <decode_spacelen.h>
 #include <Regexp.h>
 
 
@@ -262,21 +263,20 @@ int decode(String &frame) {
 }
 
 
-
+// get pulse statistics
 for (int i = 0; i<16;i++) {
   if ( pulses[i] > 0 ) {
 	if ( pulses[i] > pulses[commonPulse]) commonPulse=i;
-  Serial.print( i );
-  Serial.print( "=" );
-  Serial.print( pulses[i] );
-  Serial.print( "," );
+//  Serial.print( i );
+ // Serial.print( "=" );
+ // Serial.print( pulses[i] );
+ // Serial.print( "," );
   }
 }
 
 
-Serial.print( " common=" );
-Serial.println( commonPulse );
-
+//Serial.print( " common=" );
+//Serial.println( commonPulse );
 
 // needed pulses
 //Serial.println( (dataLen - SPACELEN_TOLERANCE)/2 );
@@ -316,12 +316,12 @@ int spacelen=0;
 //Serial.println( evenCount );
 
 if ( evenCount > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
-Serial.println( "spacelen even" );
+//Serial.println( "spacelen even" );
 	oddOffset=0;
 	spacelen=1;
 }
 if ( oddCount > ( (dataLen -SPACELEN_TOLERANCE)/2) ) {
-Serial.println( "spacelen odd" );
+//Serial.println( "spacelen odd" );
 	oddOffset=1;
 	spacelen=1;
 }
@@ -352,12 +352,54 @@ int markerstart = dumframe.indexOf(dummatch) * 2;
 if ( markerstart >=0 ) {
 String spacelenFrame="";
 String spacelenFrameInv="";
-for(int j=startOfData + oddOffset + markerstart ;j<dataLen;j+=2) {
+
+int pulsesort[16];
+for (int i = 0; i<16;i++) {
+	pulsesort[i]=i;
+}
+
+for (int i = 0; i<16;i++) {
+for (int j = i; j<15;j++) {
+	if ( pulses[pulsesort[j]] < pulses[pulsesort[j+1]] ) {
+		int dum=pulsesort[j];
+		pulsesort[j]= pulsesort[j+1]; 
+		pulsesort[j+1]=dum;
+	}
+  }
+}
+
+char splitChar = commonChar;
+if ( pulses[commonPulse] < (dataLen /2) + 2) {
+int splitPulse = ( pulsesort[1] + pulsesort[2] ) /2;
+//      Serial.print( "SPACELEN 1214 pulse " );    
+	
+ //     Serial.print( splitPulse );    
+
+  //    Serial.print( " sort1 " );    
+   //   Serial.print( pulsesort[1] );    
+    //  Serial.print( " sort2 " );    
+     // Serial.print( pulsesort[2] );    
+if ( splitPulse > 9) {
+        splitChar='A'+ splitPulse -10;
+} else {
+        splitChar='0'+ splitPulse ;
+
+}
+      //Serial.print( " char " );    
+
+      //Serial.println( splitChar );    
+
+
+
+}
+
+
+for(int j=startOfData + oddOffset + markerstart ;j<frameLen;j+=2) {
 	if ( frame.charAt( j )  == commonChar ) { 
 		char c =  frame.charAt( j -1 ) ;
 		// ##FIXME
 		// will go wrong if both 0 and 1 are larger then the marker
-		if ( c > commonChar) {
+		if ( c > splitChar) {
 			spacelenFrame += '1';
 			spacelenFrameInv += '0';
 		} else {
@@ -374,11 +416,14 @@ for(int j=startOfData + oddOffset + markerstart ;j<dataLen;j+=2) {
       Serial.print( spacelenFrame.length()) ;    
       Serial.print( ":" );    
       Serial.println( spacelenFrame ) ;    
+	
 
       Serial.print( ">SPACELENFRAMEINV:" );    
       Serial.print( spacelenFrameInv.length()) ;    
       Serial.print( ":" );    
       Serial.println( spacelenFrameInv ) ;    
+
+	int ret = decode_spacelen( spacelenFrame );
 
 
 
