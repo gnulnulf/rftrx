@@ -232,7 +232,8 @@ for (int chan=0;chan<3;chan++) {
 //
 int decode(String &frame) {
   
-  int state;
+  //int state;
+int decoded=0;
 //  Serial.print("DECODE:");  
 
   int frameLen = frame.length();
@@ -412,6 +413,9 @@ for(int j=startOfData + oddOffset + markerstart ;j<frameLen;j+=2) {
 	}
 	
 }
+	if (  decode_spacelen( spacelenFrame ) ) {
+		decoded=1;
+} else {
       Serial.print( ">SPACELENFRAME:" );    
       Serial.print( spacelenFrame.length()) ;    
       Serial.print( ":" );    
@@ -422,8 +426,8 @@ for(int j=startOfData + oddOffset + markerstart ;j<frameLen;j+=2) {
       Serial.print( spacelenFrameInv.length()) ;    
       Serial.print( ":" );    
       Serial.println( spacelenFrameInv ) ;    
+}
 
-	int ret = decode_spacelen( spacelenFrame );
 
 
 
@@ -471,7 +475,7 @@ for (int j = 0; j < ms.level; j++)
  }
 
 */
-  return state;
+  return decoded;
 }
 
 

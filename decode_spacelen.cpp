@@ -76,6 +76,36 @@ long getbinfromframeinverted( char c, String &frame, String &dataFrame, int offs
 
 int decode_spacelen( String &spacelenFrame ) {
 	int framelen = spacelenFrame.length() ;
+	int decoded=0;
+
+
+	
+	if ( framelen == 21 ) {
+		Serial.print("ATIremote:");
+		/* from the kernel source:
+		 * Each remote can be configured to transmit on one channel as follows:
+		 *   - Press and hold the "hand icon" button.  
+		 *   - When the red LED starts to blink, let go of the "hand icon" button. 
+		 *   - When it stops blinking, input the channel code as two digits, from 01 
+		 *     to 16, and press the hand icon again.
+		*/
+		String match="---------------------";
+		// f = first transmission (0=repeat)
+		// k = keycode
+		// i = channel/index
+		String data= "fkkkkkkkkkkkkkkkkiiii";
+                Serial.print("IDX=");
+                Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
+                Serial.print(";KEY=");
+                Serial.print( getbinfromframe( 'k', spacelenFrame, data,0),HEX);
+                Serial.print(";FIRST=");
+                Serial.print( getbinfromframe( 'f', spacelenFrame, data,0));
+                Serial.println();
+		decoded=1;
+	} //21
+
+
+
 	if ( framelen == 36 ) {
 		Serial.print("TempHum:");
 		String match="-----------tt----------------------";
@@ -92,7 +122,8 @@ int decode_spacelen( String &spacelenFrame ) {
 		Serial.print( getbinfromframe( 'c', spacelenFrame, data,0));
 		Serial.println();
 
-	}	
+		decoded=1;
+	}	//36 
 	if ( framelen == 88 ) {
 		Serial.println("Weather");
 /*
@@ -125,7 +156,14 @@ int decode_spacelen( String &spacelenFrame ) {
                 Serial.print( getbinfromframeinverted( 'g', spacelenFrame, data,0));
                 Serial.println();
 
-	}	
+		decoded=1;
+	} //88	
+
+
+
+
+
+return decoded;
 }
 
 
