@@ -105,6 +105,25 @@ int decode_spacelen( String &spacelenFrame ) {
 	} //21
 
 
+	if ( framelen == 32 ) {
+		Serial.print("Auriol:");
+//#        echo SPACELEN weather Auriol
+  //      # IIII IIII UUUU TTTT TTTT TTTT  CCCC CCCC
+   //     # index     bat? temp            checksum?
+		String data="iiiiiiiiuuuuttttttttttttcccccccc";
+                Serial.print("IDX=");
+                Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
+                Serial.print(";TEMP=");
+                Serial.print( getsignedbinfromframe( 't', spacelenFrame, data,0));
+                Serial.print(";UNKNOWN=");
+                Serial.print( getbinfromframe( 'u', spacelenFrame, data,0),BIN);
+                Serial.print(";CHECKSUM=");
+                Serial.print( getbinfromframe( 'c', spacelenFrame, data,0));
+                Serial.println();
+
+
+
+}
 
 	if ( framelen == 36 ) {
 		Serial.print("TempHum:");
@@ -125,7 +144,7 @@ int decode_spacelen( String &spacelenFrame ) {
 		decoded=1;
 	}	//36 
 	if ( framelen == 88 ) {
-		Serial.println("Weather");
+		Serial.print("Weather:");
 /*
 #    abc: device identifier
 #    def: temperature

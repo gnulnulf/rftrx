@@ -275,6 +275,21 @@ for (int i = 0; i<16;i++) {
   }
 }
 
+// sort the pulses 
+int pulsesort[16];
+for (int i = 0; i<16;i++) {
+	pulsesort[i]=i;
+}
+
+for (int i = 0; i<16;i++) {
+for (int j = i; j<15;j++) {
+	if ( pulses[pulsesort[j]] < pulses[pulsesort[j+1]] ) {
+		int dum=pulsesort[j];
+		pulsesort[j]= pulsesort[j+1]; 
+		pulsesort[j+1]=dum;
+	}
+  }
+}
 
 //Serial.print( " common=" );
 //Serial.println( commonPulse );
@@ -282,6 +297,95 @@ for (int i = 0; i<16;i++) {
 // needed pulses
 //Serial.println( (dataLen - SPACELEN_TOLERANCE)/2 );
 
+// check for dual pulselengths, probably 1331 coded 
+// ##FIXME need the real name for 1331 encoding ;-)
+if ( pulses[ pulsesort[0] ]  > ( (dataLen/2 - 4)) ) {
+if ( pulses[ pulsesort[0] ] + pulses[ pulsesort[1] ] > ( (dataLen - 4)) ) {
+  Serial.print( "Maybe 1331" );
+	
+int lowpulse = pulsesort[0];
+int highpulse = pulsesort[1];
+if (lowpulse > highpulse ){
+lowpulse = pulsesort[1];
+highpulse = pulsesort[2];
+}
+
+char lowChar;
+char highChar;
+if ( lowpulse > 9) {
+        lowChar='A'+ lowpulse -10;
+} else {
+        lowChar='0'+ lowpulse ;
+}
+if ( highpulse > 9) {
+        highChar='A'+ highpulse -10;
+} else {
+        highChar='0'+ highpulse ;
+}
+String lh="";
+lh+=lowChar;
+lh+=highChar;
+lh+=highChar;
+lh+=lowChar;
+
+String hl="";
+hl+=highChar;
+hl+=lowChar;
+hl+=lowChar;
+hl+=highChar;
+
+int offset;
+if ( frame.lastIndexOf( hl ) > 0 ) {
+offset = ( frame.lastIndexOf( hl ) - startOfData ) % 1;
+} else {
+offset = ( frame.lastIndexOf( lh ) - startOfData ) % 1;
+}
+
+Serial.print( " low=" );
+Serial.print( lowpulse );
+Serial.print( " high=" );
+Serial.print( highpulse );
+Serial.print( " lhhl=" );
+Serial.print( lh );
+Serial.print( " hllh=" );
+Serial.print( hl );
+Serial.print( " indexlhhl=" );
+Serial.print( frame.lastIndexOf( lh ) );
+Serial.print( " indexhllh=" );
+Serial.print( frame.lastIndexOf( hl ) );
+
+Serial.print( " offset=" );
+Serial.print( offset );
+ 
+Serial.println( );
+
+String data1331="";
+
+for(int j=startOfData + offset ;j<frameLen;j+=2) {
+        if (( frame.charAt( j )  == lowChar ) or ( frame.charAt( j+1 ) == lowChar )) {
+		if (( frame.charAt( j )  == lowChar ) and ( frame.charAt( j + 1 )  >lowChar )) data1331+='0';
+		if (( frame.charAt( j )  > lowChar ) and ( frame.charAt( j + 1 )  == lowChar )) data1331+='1';
+
+	}
+}
+Serial.print( ">DATA1331:" );
+Serial.print( data1331.length() );
+Serial.print( ":" );
+Serial.print( data1331 );
+Serial.println( );
+
+
+
+
+
+
+
+	
+
+
+
+}
+} // end_1331
 
 // if more then half of the pulses have the same lenght it's probably a spacer
 if ( pulses[ commonPulse ] > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
@@ -310,6 +414,7 @@ if ( commonPulse > 9) {
 }
 int oddOffset=0;
 int spacelen=0;
+
 
 //Serial.print( oddCount );
 //Serial.print( " even " );
@@ -354,20 +459,6 @@ if ( markerstart >=0 ) {
 String spacelenFrame="";
 String spacelenFrameInv="";
 
-int pulsesort[16];
-for (int i = 0; i<16;i++) {
-	pulsesort[i]=i;
-}
-
-for (int i = 0; i<16;i++) {
-for (int j = i; j<15;j++) {
-	if ( pulses[pulsesort[j]] < pulses[pulsesort[j+1]] ) {
-		int dum=pulsesort[j];
-		pulsesort[j]= pulsesort[j+1]; 
-		pulsesort[j+1]=dum;
-	}
-  }
-}
 
 char splitChar = commonChar;
 if ( pulses[commonPulse] < (dataLen /2) + 2) {
