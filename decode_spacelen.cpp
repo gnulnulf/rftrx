@@ -60,6 +60,23 @@ long getbinfromframe( char c, String &frame, String &dataFrame, int offset) {
 	}
 	return ret;
 }
+// 
+long gettritsbinfromframe( char c, int val0, int val1, int val2, int val3 ,String &frame, String &dataFrame, int offset) {
+        long ret=0;
+int val[]={ val0, val1, val2, val3 };
+        for (int i=0;i< dataFrame.length();i+=2) {
+                if ( dataFrame.charAt( i ) == c ) {
+                        ret<<=1;
+			int dum =0;
+                        dum |= ( frame.charAt( i + offset ) == '1' ) ?1:0;
+                        dum<<=1;
+			dum |= ( frame.charAt( i + offset +1 ) == '1' ) ?1:0;
+                        ret |=  val[ dum];
+                }
+
+        }
+        return ret;
+}
 
 long getbinfromframeinverted( char c, String &frame, String &dataFrame, int offset) {
         long ret=0;
@@ -143,6 +160,75 @@ int decode_spacelen( String &spacelenFrame ) {
 
 		decoded=1;
 	}	//36 
+	if ( framelen == 64 ) {
+/* newkaku, zonder dimmer
+
+- 26 bit:  Address
+- 1  bit:  group bit
+- 1  bit:  on/off/[dim]
+- 4  bit:  unit
+- [4 bit:  dim level. Only present of [dim] is chosen]
+newkaku 00FBC8B2	10
+
+0085856E	3 iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu 
+>SPACELENFRAME:64:0101100101010110011010010101011001100110100110101001010101011001
+>SPACELENFRAME:64:01 01 10 01 01 01 01 10 01 10 10 01 01 01 01 10 01 10 01 10 10 01 10 10 10 01 01 01 01 01 10 01
+                  00 1000 0101 1000 0101  0110 1110  0  0  0010
+                   0    8    5    8    5     6    e  G  O     2(ch 3)
+*/
+		String match1="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii10oouuuuuuuu";
+		String match2="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii01oouuuuuuuu";
+		String data="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu";
+		Serial.print("Newkaku:");
+		Serial.print("IDX=");
+                Serial.print( gettritsbinfromframe( 'i',0,0,1,0, spacelenFrame, data,0),HEX);
+		Serial.print(" GROUP=");
+                Serial.print( gettritsbinfromframe( 'g',0,0,1,0, spacelenFrame, data,0));
+		Serial.print(" STATE=");
+                Serial.print( gettritsbinfromframe( 'o',0,0,1,0, spacelenFrame, data,0));
+		Serial.print(" UNIT=");
+                Serial.print( gettritsbinfromframe( 'u',0,0,1,0, spacelenFrame, data,0) +1);
+                Serial.println();
+
+		//decoded=1;
+
+} //64
+
+        if ( framelen == 72 ) {
+/* newkaku, zonder dimmer
+
+- 26 bit:  Address
+- 1  bit:  group bit
+- 1  bit:  on/off/[dim]
+- 4  bit:  unit
+- [4 bit:  dim level. Only present of [dim] is chosen]
+newkaku 00FBC8B2        10
+
+0085856E        3
+>SPACELENFRAME:64:0101100101010110011010010101011001100110100110101001010101011001
+>SPACELENFRAME:64:01 01 10 01 01 01 01 10 01 10 10 01 01 01 01 10 01 10 01 10 10 01 10 10 10 01 01 01 01 01 10 01
+                  00 1000 0101 1000 0101  0110 1110  0  0  0010
+                   0    8    5    8    5     6    e  G  O     2(ch 3)
+*/
+		String match="----------------------------------------------------11------------------";
+		String data="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu";
+                Serial.print("NewkakuDim:");
+		Serial.print("IDX=");
+                Serial.print( gettritsbinfromframe( 'i',0,0,1,0, spacelenFrame, data,0),HEX);
+		Serial.print(" GROUP=");
+                Serial.print( gettritsbinfromframe( 'g',0,0,1,0, spacelenFrame, data,0));
+		Serial.print(" STATE=DIM");
+		Serial.print(" UNIT=");
+                Serial.print( gettritsbinfromframe( 'u',0,0,1,0, spacelenFrame, data,0) +1);
+		Serial.print(" DIM=");
+                Serial.print( gettritsbinfromframe( 'd',0,0,1,0, spacelenFrame, data,0) );
+                Serial.println();
+
+                decoded=1;
+
+} //72
+
+
 	if ( framelen == 88 ) {
 		Serial.print("Weather:");
 /*
