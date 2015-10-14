@@ -63,6 +63,7 @@ static bool glitch[3];
   static unsigned long volatile rxbuffer[3][ RX_SIZE +4 ];
   static  unsigned int rxhead[3];
   static  unsigned int rxtail[3];
+  static  unsigned int rxenable[3];
 
    
   

@@ -17,6 +17,7 @@
 
 
 unsigned int RFtrx::rxtail[3]={0,0,0};
+unsigned int RFtrx::rxenable[3]={0,0,0};
 unsigned int RFtrx::rxhead[3]={0,0,0};
 unsigned long RFtrx::lastTime[3]={0,0,0};
 
@@ -63,11 +64,13 @@ unsigned long volatile RFtrx::rxbuffer[3][ RX_SIZE +4 ];
 
 
 void RFtrx::enableReceive(int channel=0) {
+	rxenable[ channel] =1;
 	//Serial.print("+");
 }
 
 void RFtrx::disableReceive(int channel=0) {
 	//Serial.print("-");
+	rxenable[ channel] =0;
 }
 
 
@@ -108,15 +111,15 @@ long RFtrx::getNext(int channel=0)  {
 }	
 
 void RFtrx::receiveInterruptChannel0() {
-	RFtrx::receiveInterrupt(0);
+	if ( rxenable[0] == 1 ) RFtrx::receiveInterrupt(0);
 }
 
 void RFtrx::receiveInterruptChannel1() {
-	RFtrx::receiveInterrupt(1);
+	 if ( rxenable[1] == 1 ) RFtrx::receiveInterrupt(1);
 }
 
 void RFtrx::receiveInterruptChannel2() {
-	RFtrx::receiveInterrupt(2);
+	 if ( rxenable[2] == 1 ) RFtrx::receiveInterrupt(2);
 }
 
 // receive a frame flank for channel n

@@ -157,6 +157,9 @@ myrf.initInterrupt(5,2);
 
 
 void loop() {
+	myrf.enableReceive( 0 );
+	myrf.enableReceive( 1 );
+	myrf.enableReceive( 2);
   int col=0;
 
 // om te zien hoeveel loops per seconde gemaakt worden
@@ -171,11 +174,13 @@ if ( myrf.dataready(chan) ) {
   returnstr="";
    appendAndParse( returnstr ,chan , myrf.getNext(chan) );
     if ( returnstr != "" ) {
-       		int ret= decode(returnstr);
+	myrf.disableReceive( chan );
+	int ret= decode(returnstr);
 	if ( ret == 0 ) {
            Serial.println(returnstr);    
-}
-          returnstr="";  
+	}
+	returnstr="";  
+	myrf.enableReceive( chan );
 	 
     }
 }
