@@ -42,8 +42,15 @@ else
     endif
     UNAME_M := $(shell uname -m)
     ifeq ($(UNAME_M),armv6l)
-	# The recommended compiler flags for the Raspberry Pi
+	# The recommended compiler flags for the Raspberry Pi 1
 	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
+    endif
+    ifeq ($(UNAME_M),armv7l)
+	# The recommended compiler flags for the Raspberry Pi 2 gcc-4.8
+	CCFLAGS=-Ofast  -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
+	# The recommended compiler flags for the Raspberry Pi 2 gcc-4.6
+	CCFLAGS=-Ofast   -march=armv7-a -mfpu=neon-vfpv4 -mfloat-abi=hard
+	#MAKEFLAGS=-j4
     endif
 endif
 
