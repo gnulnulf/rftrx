@@ -13,9 +13,40 @@
 #
 prefix := /usr/local
 
-# The recommended compiler flags for the Raspberry Pi
-CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
-#CCFLAGS=
+
+ifeq ($(OS),Windows_NT)
+    CCFLAGS += -D WIN32
+    ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+        CCFLAGS += -D AMD64
+    endif
+    ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+        CCFLAGS += -D IA32
+    endif
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        CCFLAGS += -D LINUX
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        CCFLAGS += -D OSX
+    endif
+    UNAME_P := $(shell uname -p)
+    ifeq ($(UNAME_P),x86_64)
+        CCFLAGS += -D AMD64
+    endif
+    ifneq ($(filter %86,$(UNAME_P)),)
+        CCFLAGS += -D IA32
+    endif
+    ifneq ($(filter arm%,$(UNAME_P)),)
+        CCFLAGS += -D ARM
+    endif
+    UNAME_M := $(shell uname -m)
+    ifeq ($(UNAME_M),armv6l)
+	# The recommended compiler flags for the Raspberry Pi
+	CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
+    endif
+endif
+
 
 # define all programs
 #PROGRAMS = scanner pingtest pongtest
@@ -25,6 +56,7 @@ SOURCES = ${PROGRAMS:=.cpp}
 all: ${PROGRAMS}
 
 ${PROGRAMS}: ${SOURCES}
+	echo ${CCFLAGS}
 	g++ ${CCFLAGS} -Wall -I../ $@.cpp -o $@
 
 clean:

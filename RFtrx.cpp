@@ -27,10 +27,10 @@ unsigned long RFtrx::lastTime[3]={0,0,0};
 //unsigned long RFtrx::minPeriodLength=200;
 //unsigned long RFtrx::maxPeriodLength=4000;
 
-unsigned long RFtrx::minStartLength=2200;
+unsigned long RFtrx::minStartLength=1000;
 unsigned long RFtrx::maxStartLength=20000;
-unsigned long RFtrx::minPeriodLength=150;
-unsigned long RFtrx::maxPeriodLength=2000;
+unsigned long RFtrx::minPeriodLength=100;
+unsigned long RFtrx::maxPeriodLength=3600;
 
 bool RFtrx::activedata[3]={0,0,0};
 bool RFtrx::glitch[3]={0,0,0};

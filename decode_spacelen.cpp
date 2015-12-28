@@ -115,10 +115,13 @@ int decode_spacelen( String &spacelenFrame ) {
                 Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
                 Serial.print(";KEY=");
                 Serial.print( getbinfromframe( 'k', spacelenFrame, data,0),HEX);
+
                 Serial.print(";FIRST=");
                 Serial.print( getbinfromframe( 'f', spacelenFrame, data,0));
+                Serial.print(";frame=");
+                Serial.print( spacelenFrame);
                 Serial.println();
-		decoded=1;
+		decoded=0;
 	} //21
 
 
@@ -142,10 +145,29 @@ int decode_spacelen( String &spacelenFrame ) {
 
 }
 
+        if ( framelen == 34 ) {
+                Serial.print("TempHum:");
+                String match="---------tt----------------------";
+                String data="iiiiiibbcctttttttttttteeeeehhhhhhh";
+                Serial.print("IDX=");
+                Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
+                Serial.print(";TEMP=");
+                Serial.print( getsignedbinfromframe( 't', spacelenFrame, data,0));
+                Serial.print(";HUM=");
+                Serial.print( getbinfromframe( 'h', spacelenFrame, data,0));
+                Serial.print(";BAT=");
+                Serial.print( getbinfromframe( 'b', spacelenFrame, data,0));
+                Serial.print(";CHAN=");
+                Serial.print( getbinfromframe( 'c', spacelenFrame, data,0));
+                Serial.println();
+
+                decoded=0;
+        }       //34
+
 	if ( framelen == 36 ) {
 		Serial.print("TempHum:");
 		String match="-----------tt----------------------";
-		String data="iiiiiiiibbcctttttttttttteeeeehhhhhhh";
+		String data="--iiiiiibbcctttttttttttteeeeehhhhhhh";
 		Serial.print("IDX=");
 		Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
 		Serial.print(";TEMP=");
@@ -158,7 +180,7 @@ int decode_spacelen( String &spacelenFrame ) {
 		Serial.print( getbinfromframe( 'c', spacelenFrame, data,0));
 		Serial.println();
 
-		decoded=1;
+		decoded=0;
 	}	//36 
 	if ( framelen == 64 ) {
 /* newkaku, zonder dimmer
@@ -224,7 +246,7 @@ newkaku 00FBC8B2        10
                 Serial.print( gettritsbinfromframe( 'd',0,0,1,0, spacelenFrame, data,0) );
                 Serial.println();
 
-                decoded=1;
+                decoded=0;
 
 } //72
 
@@ -261,7 +283,7 @@ newkaku 00FBC8B2        10
                 Serial.print( getbinfromframeinverted( 'g', spacelenFrame, data,0));
                 Serial.println();
 
-		decoded=1;
+		decoded=0;
 	} //88	
 
 

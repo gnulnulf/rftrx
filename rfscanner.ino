@@ -174,13 +174,13 @@ if ( myrf.dataready(chan) ) {
   returnstr="";
    appendAndParse( returnstr ,chan , myrf.getNext(chan) );
     if ( returnstr != "" ) {
-	myrf.disableReceive( chan );
+	//myrf.disableReceive( chan );
 	int ret= decode(returnstr);
 	if ( ret == 0 ) {
            Serial.println(returnstr);    
 	}
 	returnstr="";  
-	myrf.enableReceive( chan );
+	//myrf.enableReceive( chan );
 	 
     }
 }
@@ -518,10 +518,10 @@ for(int j=startOfData + oddOffset + markerstart ;j<frameLen;j+=2) {
       Serial.println( spacelenFrame ) ;    
 	
 
-      Serial.print( ">SPACELENFRAMEINV:" );    
-      Serial.print( spacelenFrameInv.length()) ;    
-      Serial.print( ":" );    
-      Serial.println( spacelenFrameInv ) ;    
+//      Serial.print( ">SPACELENFRAMEINV:" );    
+ //     Serial.print( spacelenFrameInv.length()) ;    
+  //    Serial.print( ":" );    
+   //   Serial.println( spacelenFrameInv ) ;    
 }
 
 

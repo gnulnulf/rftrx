@@ -6,6 +6,10 @@ BOARD_TAG = mega2560
 ARDUINO_PORT = /dev/ttyUSB0
 RECEIVER = \"433A\"
 
+BOARD_TAG = mega
+ARDUINO_PORT = /dev/ttyUSB0
+RECEIVER = \"433A\"
+
 
 BVERSION=`date +'%Y%m%d'`
 
