@@ -7,9 +7,12 @@ ARDUINO_PORT = /dev/ttyUSB0
 RECEIVER = \"433A\"
 
 BOARD_TAG = mega
-ARDUINO_PORT = /dev/ttyUSB0
-RECEIVER = \"433A\"
+#ARDUINO_PORT = /dev/ttyUSB0
+#RECEIVER = \"433A\"
 
+#AVRDUDE_ARD_PROGRAMMER = wiring
+#AVRDUDE_ARD_PROGRAMMER = arduino
+#AVRDUDE_ARD_PROGRAMMER = stk500
 
 BVERSION=`date +'%Y%m%d'`
 
@@ -17,6 +20,6 @@ BVERSION=`date +'%Y%m%d'`
 #CPPFLAGS = -DBVERSION=$(BVERSION) -DRECEIVER=$(RECEIVER)
 
 
-ARDUINO_LIBS = RFtrx
+#ARDUINO_LIBS = RFtrx
 ARDUINO_DIR = /usr/share/arduino
 include /usr/share/arduino/Arduino.mk
