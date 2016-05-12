@@ -34,16 +34,17 @@ typedef struct RFframe {
 
 // RFTRX 
 #include "radio_hardware.h"
-#include "SerialCommands.h"
+
 #include "commands.h"
 #include "RFreceive.h"
 #include "RFtransmit.h"
 
 #include "decode_spacelen.h"
 #include "frame_decode.h"
+#include "frame_encode.h"
 //#include "Regexp.h"
 #include "tools.h"
-
+#include "SerialCommands.h"
 
 extern String dum;
 

@@ -276,12 +276,19 @@ RFframe f;
   //f.data="193131313131313131311331133113131331133113131331131y";
   //f.data="3131313131313131313131313131131331313131131331311u";
 //aan
-f.data="3131313131313131313113311331131313311331133113131v";
+//f.data="3131313131313131313113311331131313311331133113131v";
 // 0 = 1313
 // 1 = 3131
 // 2 = 1331
 // 3 = 3113?
+f = impuls(0,'c',1);
+int r = sendframe(f ,0 ); 
+/*
 String trits="111112202220";
+// data
+f.data = tritsToRel(trits);
+// frame-end
+f.data += "1v";
 Serial.println(tritsToRel(trits));
 Serial.println(f.data);
 //1    1    1    1    1    2    2    0    2    2    2    0 
@@ -293,7 +300,19 @@ Serial.println("#");
 //Serial.print("+");
 int r=sendframe(f,0);
 //uit
-f.data="3131313131313131313113311331131313311331131313311v";
+//f.data="3131313131313131313113311331131313311331 1313 1331 1v";
+//f.data="3131313131313131313113311331131313311331133113131v";
+Serial.println(tritsToRel(trits));
+Serial.println(f.data);
+*/
+String trits="111112202202";
+// data
+f.data = tritsToRel(trits);
+// frame-end
+f.data += "1v";
+
+f = impuls(0,4,0);
+Serial.println(f.data);
 
 delay(2000);
  r=sendframe(f,0);
