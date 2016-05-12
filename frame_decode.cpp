@@ -19,7 +19,8 @@ AOFF                                OFF
 Arelease?                           RELEASE
   >DATA1331:23:0000000000 101010101 1111
  */
- 
+
+ if ( (framelen == 23) or  (framelen == 24)  ) {
    Serial.print(F("    ELRO/IMPULS:"));
   String data= "z-z-z-z-z-a-a-a-a-a-x-x";
                 Serial.print("IDX=");
@@ -32,9 +33,18 @@ Arelease?                           RELEASE
                 Serial.print(";frame=");
                 Serial.print( sFrame);
                 Serial.println();
-    decoded=0;
+    decoded=1;
+ }
+
 
 }
+
+int frame_decode(RFframe &frame) {
+  return frame_decode( frame.returnstring);
+}
+
+
+
 
 // 
 // decode string

@@ -59,6 +59,7 @@ void ping(String param );
 
 void cmd_rxenable(String param);
 void cmd_rxdisable(String param);
+void cmd_txframe(String param);
 
 
 /*

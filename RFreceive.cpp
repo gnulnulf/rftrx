@@ -397,6 +397,100 @@ p = frame[channel][i] / ( period - 5 );
 
 
 
+void appendAndParseFrame(RFframe &dest, int channel, long d)/*NOPROTO*/ {
+        dest.returnstring="";
+    if ( d == 0 ) {
+    if (( count[ channel ] > MIN_FRAMESIZE ) ) {
+      long period=frame[ channel ][0];
+      long high=frame[ channel ][0];
+      long avg=frame[ channel ][0];
+      for (int i=0;i<count[ channel ];i++) {
+        avg += frame[ channel ][i];
+        if ( frame[ channel ][i] < period ) {
+          period=frame[ channel ][i];
+        }
+        if ( frame[ channel ][i] > period ) {
+          high=frame[ channel ][i];
+        }
+      }      
+      avg /= count[ channel ];
+
+
+// indien er minder dan 10% 1-periods zijn zal dat wel fout zijn
+int countLow=0;
+for (int i=0;i<count[ channel ];i++) {
+        if ((( frame[ channel ][i] + period * 0.5 ) / period ) ==1 ) countLow++;
+}
+if (countLow< (count[channel] / 10)) {
+long lowAvg=0;
+int lowCount=0;
+//Serial.println("LOW ERROR");
+//      period*= 1.5;
+for (int i=0;i<count[ channel ];i++) {
+        if ( frame[ channel ][i]  < period * 2 ) {
+        lowAvg+= frame[ channel ][i];
+        lowCount++;
+        }
+}
+// use the average of the small
+// half periods...
+//period = (lowAvg / lowCount)/2;
+period = (lowAvg / lowCount);
+}
+
+
+
+                        dest.returnstring=">"+receiver[ channel ]+":"+count[ channel ]+":"+frame[ channel ][0]+":"+period+":";
+
+      for (int i=0;i<=count[ channel ];i++) {
+        //int p = frame[ channel ][i] / ( period *0.95 );
+        int p = (frame[ channel ][i] + period*0.7) / ( period  );
+        //int p = frame[ channel ][i] / ( period -5 );
+
+//Serial.print(i);
+//Serial.print(":");
+//Serial.print( frame[ channel ][i]);
+//Serial.print(":");
+//Serial.println(p);
+
+//dest.returnstring += frameIntToChar( p) ;
+
+                                // moet 0-9a-z worden om de 31x op te vangen.
+                                if ( p > 35 ) p=35;
+                                if (p < 10) {
+                                 dest.returnstring+= p;
+                                }else{
+                                 char dum='a'+p-10;
+                                  dest.returnstring += dum;                                  
+                                }
+          /*
+p = frame[channel][i] / ( period - 5 );
+          if ( p > 15 ) p=0xf;
+          dest += String( p  , HEX);
+*/
+      }
+//Serial.println("--------");
+      dest.returnstring +="#";      
+    }
+    count[ channel ]=0;
+    //Serial.println("."); 
+  } else {
+    frame[ channel ][count[ channel ]] = d;
+    count[ channel ]++;
+    if ( count[ channel ] >= FRAMESIZE ) {
+       Serial.println( "OVERFLOW! ");
+      count[ channel ]=0;
+    }
+  }
+} //einde addparseframe
+
+
+
+
+
+
+
+
 
 
 

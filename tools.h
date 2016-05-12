@@ -5,4 +5,10 @@
 
 int freeRam ();
 
+int frameCharToInt( char c );
+
+char frameIntToChar( int i );
+String tritsToRel( String trits);
+
+
 #endif

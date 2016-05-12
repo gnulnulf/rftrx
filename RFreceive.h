@@ -16,12 +16,8 @@
 #ifndef _RFRECEIVE_h
 #define _RFRECEIVE_h
 
-#include <Arduino.h>
-#include <inttypes.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include "radio_hardware.h"
 #include "rftrx.h"
+
 
 
 #ifndef RADIOCOUNT
@@ -30,10 +26,12 @@
 
 // buffer can contain max 128 changes/pulse lengths
 //#define RX_SIZE 128 
-#define RX_SIZE 128 
+#define RX_SIZE 200 
 
-
+void appendAndParseFrame(RFframe &f , int channel, long d);
 void appendAndParse(String &dest, int channel, long d);
+
+
 
 
 class RFreceive {

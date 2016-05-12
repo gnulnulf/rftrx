@@ -23,7 +23,7 @@
 #include <avr/interrupt.h>
 
 
-#define FRAMESIZE 300
+#define FRAMESIZE 350
 //#define FRAMESIZE (RX_SIZE/2)
 #define MIN_FRAMESIZE 24
 #define SPACELEN_TOLERANCE 5
@@ -40,6 +40,7 @@
 
 
 int frame_decode(String &frame);
+int frame_decode(RFframe &frame);
 
 
 int decode_1331( String &spacelenframe );

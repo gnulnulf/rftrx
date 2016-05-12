@@ -35,7 +35,7 @@
  *  
  */
 #include "rftrx.h"
-String dum;
+//String dum;
 
 String returnstr;
 
@@ -46,10 +46,14 @@ void setup() {
 
 
   setupRadios();
-
+  setupTX();
 
   myrx.enableReceive( 0 );
   myrx.enableReceive( 1 );
+  //myrx.disableReceive( 0 );
+ // myrx.disableReceive( 1 );
+
+  cmd_txframe("");
 //  myrx.enableReceive( 2);
 } //setup
 
@@ -58,7 +62,12 @@ void setup() {
  * LOOP
  */
 
+
+
+
 void loop() {
+
+    RFframe frame;
 
 
 
@@ -74,11 +83,12 @@ while (true) {
 for (int chan=0;chan< RADIOCOUNT;chan++) {
 if ( myrx.dataready(chan) ) {
   returnstr="";
-   appendAndParse( returnstr ,chan , myrx.getNext(chan) );
-    if ( returnstr != "" ) {
-   Serial.println(returnstr);    
+//   appendAndParse( returnstr ,chan , myrx.getNext(chan) );
+   appendAndParseFrame( frame ,chan , myrx.getNext(chan) );
+    if ( frame.returnstring != "" ) {
+      Serial.println(frame.returnstring);    
 	//myrx.disableReceive( chan );
-	int ret= frame_decode(returnstr);
+	int ret= frame_decode(frame);
 	if ( ret == 0 ) {
         //   Serial.println(returnstr);    
 	}

@@ -14,9 +14,14 @@ Command commands[] ={
 
   {"rxenable",&cmd_rxenable,0,"Enable channel n"},
   {"rxdisable",&cmd_rxdisable,0,"Disable channel n"},
-
+  {"txframe",&cmd_txframe,0,"FRAME SEND TEST"},
+  
+  
   {"ping",&ping,0,"Keep alive test"},
 };
+
+
+
 
 
 // serial
@@ -183,6 +188,8 @@ Serial.println("#");
   
 }
 
+
+
 void ping(String param ){
   Serial.println("pong");
 }
@@ -254,6 +261,44 @@ void cmd_rxdisable(String param ){
     }
 }
 
+
+
+void cmd_txframe(String param ){
+
+RFframe f;
+  f.period=150;
+  //C aan y1313131313131313131133113311331133113313131313111
+  //C uit y1313131313131313131133113311313133113311313133111
+  //      SS
+  //      00000000011111111112222222222333333333344444444445555555555  
+  //      12345678901234567890123456789012345678901234567890123456789
+  f.data="1913131313131313131311331133113131331133113131331111y";
+  //f.data="193131313131313131311331133113131331133113131331131y";
+  //f.data="3131313131313131313131313131131331313131131331311u";
+//aan
+f.data="3131313131313131313113311331131313311331133113131v";
+// 0 = 1313
+// 1 = 3131
+// 2 = 1331
+// 3 = 3113?
+String trits="111112202220";
+Serial.println(tritsToRel(trits));
+Serial.println(f.data);
+//1    1    1    1    1    2    2    0    2    2    2    0 
+//3131 3131 3131 3131 3131 1331 1331 1313 1331 1331 1331 1313 1v
+
+Serial.print(F("+SENDFRAME:"));
+Serial.print( f.data );
+Serial.println("#");
+//Serial.print("+");
+int r=sendframe(f,0);
+//uit
+f.data="3131313131313131313113311331131313311331131313311v";
+
+delay(2000);
+ r=sendframe(f,0);
+  
+}
 
 
 
