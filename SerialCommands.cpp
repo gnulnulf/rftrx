@@ -266,7 +266,7 @@ void cmd_rxdisable(String param ){
 void cmd_txframe(String param ){
 
 RFframe f;
-  f.period=150;
+/*  f.period=305;
   //C aan y1313131313131313131133113311331133113313131313111
   //C uit y1313131313131313131133113311313133113311313133111
   //      SS
@@ -281,8 +281,23 @@ RFframe f;
 // 1 = 3131
 // 2 = 1331
 // 3 = 3113?
-f = impuls(0,'c',1);
-int r = sendframe(f ,0 ); 
+f = impuls(31,'c',1);
+
+//>433A:49:10072:306:x3 131313131313311313133113311313133113311313133111#
+//  DATA1331:23:00000010001010001010001
+// f.data="1u";
+// f.data+=tritsToRel("020002202202");
+ //f.data="19";
+
+
+  //f.data=tritsToRel("000202202202");
+  f.data=  tritsToRel("000202202220");
+ f.data+="1u";
+f.period=320;
+*/
+//f = elro(2,'c',1);
+f = impuls(1,'c',1);
+int r = sendframe(f ,0,6 ); 
 /*
 String trits="111112202220";
 // data
@@ -305,17 +320,43 @@ int r=sendframe(f,0);
 Serial.println(tritsToRel(trits));
 Serial.println(f.data);
 */
-String trits="111112202202";
+String trits="000202202202";
 // data
 f.data = tritsToRel(trits);
 // frame-end
-f.data += "1v";
+//f.data += "1v";
+  //                      0    0    0    3    0    3    3    0    3    3    3    0
+//>433A:49:10068:308:x3 1313 1313 1313 3113 1313 3113 3113 1313 3113 3113 3113 1313#
+//>433A:49:11048:301:    z1313 1313 1313 3113 1313 3113 3113 1313 3113 3113 3113 13165#
+                        //1313 1313 1313 3113 1313 3113 3113 1313 3113 3113 3113 1313
+//                   1u 1313 1331 1313 1313 1313 1331 1331 1313 1331 1331 1331 13131u
+          //           19133113311331131313311331133113131331133113311313
+//  DATA1331:24:000000100010100010101000
+ //   ELRO/IMPULS:IDX=2;SWITCH=27;ACTION=2;frame=000000100010100010101000
 
-f = impuls(0,4,0);
+//aan  TRITS:0002022022021u#
+
+//uit  TRITS:0002022022201u#
+
+
+//f = impuls(31,4,0);
+//f.data="1u";
+// f.data+=tritsToRel("020002202220");
+// f.data=  tritsToRel("000202202220");
+//f.data+="1u";
+ 
+/*f.period=320;
+
+  
+  f.data=tritsToRel("000202202202");
+f.data+="1u";
+
 Serial.println(f.data);
-
+*/
 delay(2000);
- r=sendframe(f,0);
+//f = elro(2,'c',0);
+f = impuls(1,'c',0);
+ r=sendframe(f,0,6);
   
 }
 

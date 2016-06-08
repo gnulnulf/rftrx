@@ -28,9 +28,10 @@
 //#define RX_SIZE 128 
 #define RX_SIZE 200 
 
+
 void appendAndParseFrame(RFframe &f , int channel, long d);
 void appendAndParse(String &dest, int channel, long d);
-
+String getReturnstring( RFframe &f );
 
 
 
@@ -54,7 +55,6 @@ static void receiveInterruptA();
    bool dataready(int channel ) ;
    long getNext(int channel) ;
   int dataCount(int channel);
-
    
    void setMinStartLength( unsigned long length );
    void setMaxStartLength( unsigned long length );
@@ -64,6 +64,7 @@ static void receiveInterruptA();
   
   
   
+
 
 private:
 static bool activedata[RADIOCOUNT];

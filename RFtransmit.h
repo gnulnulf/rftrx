@@ -3,7 +3,7 @@
 
 
 void setupTX();
-int sendframe(RFframe &f,int channel);
+int sendframe(RFframe &f,int channel,int repeat=1);
 
 
 #endif

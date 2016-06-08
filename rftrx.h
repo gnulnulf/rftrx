@@ -5,6 +5,7 @@
 #define RADIOCOUNT 2 
 
 
+#define RFLINK
 
 // Arduino base
 #include <Arduino.h>
@@ -24,9 +25,12 @@ typedef struct RFframe {
   String receiver;
   int count;
   int period;
+  long startperiod;
   String data;
+  String reldata;
   String returnstring;
   String output[];
+  unsigned long crc;
 } RFframe;
 
 

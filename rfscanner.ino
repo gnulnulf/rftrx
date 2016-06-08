@@ -64,7 +64,10 @@ void setup() {
 
 
 
-
+#define CACHESIZE 30 
+#define CACHEDELAY 1000
+long cache[RADIOCOUNT][CACHESIZE];
+int cachecount[RADIOCOUNT][CACHESIZE];
 void loop() {
 
     RFframe frame;
@@ -76,6 +79,10 @@ void loop() {
 // om te zien hoeveel loops per seconde gemaakt worden
 long  load=0;
 long  lastLoad=millis();
+long  cacheLoop=millis();
+
+
+
 
 while (true) {
 
@@ -86,15 +93,61 @@ if ( myrx.dataready(chan) ) {
 //   appendAndParse( returnstr ,chan , myrx.getNext(chan) );
    appendAndParseFrame( frame ,chan , myrx.getNext(chan) );
     if ( frame.returnstring != "" ) {
-      Serial.println(frame.returnstring);    
+
+bool cached=0;
+      //      Serial.print("CACHESEARCH"); 
+      for (int l=0;l<CACHESIZE;l++) {
+    //        Serial.print("."); 
+        if (cache[chan][l]==frame.crc){
+  //    Serial.println("CACHE HIT ");
+      cachecount[chan][l]=CACHEDELAY;
+      cached=1;
+      break;
+        
+        
+      }
+      }
+//Serial.println(cached);
+if (cached==0){
+        //    Serial.print("CACHEADD"); 
+      for (int l=0;l<CACHESIZE;l++) {
+          //  Serial.print("."); 
+        if (cache[chan][l]==0){
+      //Serial.print("CACHE ADD ");
+      cachecount[chan][l]=CACHEDELAY;
+      cache[chan][l]=frame.crc;
+      if (l==CACHESIZE-1) {
+        Serial.println("CACHE FULL");            
+      }
+      break;
+        
+        
+      }
+      }
+
+//parse
+ //     Serial.println(frame.returnstring);    
+      Serial.println(getReturnstring(frame));    
+      frame.returnstring=getReturnstring(frame);
+      //Serial.print("CRC ");
+      //Serial.println(frame.crc);    
+
+
+  
+
+      long decodeStart=millis();
 	//myrx.disableReceive( chan );
 	int ret= frame_decode(frame);
 	if ( ret == 0 ) {
         //   Serial.println(returnstr);    
 	}
 	returnstr="";  
+
+// Serial.print("decode-time:");
+// long decodeTime=millis()-decodeStart;
+ //Serial.println(decodeTime);
 	//myrx.enableReceive( chan );
-	 
+    } 
     }
 }
 }
@@ -106,13 +159,32 @@ serialEvent(); //call the function
 
 
 
-
-
-
-
 if ( true ) {
   load++;
   long current=millis();
+
+if (current > cacheLoop + 100 ) {
+  cacheLoop=current;
+           //Serial.println("CACHECLEAN"); 
+           for (int chan=0;chan< RADIOCOUNT;chan++) {
+      for (int l=0;l<CACHESIZE;l++) {
+            if ( cachecount[chan][l] > 0 ) {
+              if (cachecount[chan][l]>100) {
+                cachecount[chan][l]-=100;
+              } else {
+                cachecount[chan][l]=0;
+                cache[chan][l]=0;
+                
+              }
+              
+
+              
+            }
+            
+      }
+}
+}
+  
   if ( current > lastLoad + 10000 ) {
     lastLoad=current;
     Serial.print( F("LoadLoops:"));

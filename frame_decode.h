@@ -37,6 +37,8 @@
 #define PROTO_COUNT 5
 
 
+//array min_period, max_period, count, max_count, array of matches, &handler 
+// 140,190,49,52,["-1-1-1-1-1..."],&impuls_rx
 
 
 int frame_decode(String &frame);

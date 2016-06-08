@@ -7,7 +7,7 @@ void setupTX(){
 
   
 }
-int sendframe(RFframe &frame,int channel){
+int sendframe(RFframe &frame,int channel, int repeat){
   int length = frame.data.length();
     Serial.print("Send FRAME on radio ");
     Serial.println( channel );
@@ -18,6 +18,8 @@ int sendframe(RFframe &frame,int channel){
 
     Serial.print("count: ");
     Serial.println( frame.data.length() );
+    Serial.print("repeat: ");
+    Serial.println( repeat );
 
     bool state=0;
 
@@ -29,9 +31,9 @@ int sendframe(RFframe &frame,int channel){
       //Serial.println( duration );
       long duration = frameCharToInt(frame.data.charAt(i)) * frame.period ;
 
-  Serial.print(state);     
-  Serial.print(" - ");     
-      Serial.println(frameCharToInt(frame.data.charAt(i)));
+//  Serial.print(state);     
+//  Serial.print(" - ");     
+ //     Serial.println(frameCharToInt(frame.data.charAt(i)));
       if ( duration > 50) duration -= 10;
       t[ i] = duration;
         state=state?0:1;
@@ -41,15 +43,15 @@ int sendframe(RFframe &frame,int channel){
           digitalWrite(TRANSMITTER1_DATA,LOW);
           digitalWrite(TRANSMITTER1_VCC,HIGH);
   noInterrupts();
-    for ( int j=0; j<6;j++) {
+    for ( int j=0; j<repeat;j++) {
         state=1;
     for ( int i=0; i< (length);i++) {
           digitalWrite(TRANSMITTER1_DATA,state);
           delayMicroseconds(t[i]);
         state=state?0:1;
       }
-      Serial.print("STATE=");
-      Serial.print(state);
+//      Serial.print("STATE=");
+  //    Serial.print(state);
  //         digitalWrite(TRANSMITTER1_DATA,HIGH);
   //        delayMicroseconds(150);
 //          digitalWrite(TRANSMITTER1_DATA,LOW);

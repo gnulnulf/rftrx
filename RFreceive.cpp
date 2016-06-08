@@ -124,6 +124,10 @@ int RFreceive::dataCount(int channel=0) {
 }
 
 
+String getReturnstring( RFframe &f ){
+                        String r=">"+f.receiver+":"+f.count+":"+f.startperiod+":"+f.period+":"+f.reldata+"#";
+  return r;
+  }
 
 
   
@@ -355,6 +359,7 @@ period = (lowAvg / lowCount);
 
 
                         dest=">"+receiver[ channel ]+":"+count[ channel ]+":"+frame[ channel ][0]+":"+period+":";
+                        
 
       for (int i=0;i<=count[ channel ];i++) {
         //int p = frame[ channel ][i] / ( period *0.95 );
@@ -439,8 +444,15 @@ period = (lowAvg / lowCount);
 }
 
 
-
                         dest.returnstring=">"+receiver[ channel ]+":"+count[ channel ]+":"+frame[ channel ][0]+":"+period+":";
+                        dest.reldata="";
+                        dest.count=count[ channel ];
+                        dest.period=period;
+                        dest.startperiod=frame[ channel ][0];
+                        dest.receiver=receiver[ channel ];
+                        dest.crc=dest.count<<8;
+
+    
 
       for (int i=0;i<=count[ channel ];i++) {
         //int p = frame[ channel ][i] / ( period *0.95 );
@@ -456,12 +468,13 @@ period = (lowAvg / lowCount);
 //dest.returnstring += frameIntToChar( p) ;
 
                                 // moet 0-9a-z worden om de 31x op te vangen.
+                                dest.crc ^=p;
                                 if ( p > 35 ) p=35;
                                 if (p < 10) {
-                                 dest.returnstring+= p;
+                                 dest.reldata+= p;
                                 }else{
                                  char dum='a'+p-10;
-                                  dest.returnstring += dum;                                  
+                                  dest.reldata += dum;                                  
                                 }
           /*
 p = frame[channel][i] / ( period - 5 );
