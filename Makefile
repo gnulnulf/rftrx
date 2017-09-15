@@ -23,3 +23,4 @@ BVERSION=`date +'%Y%m%d'`
 #ARDUINO_LIBS = RFtrx
 ARDUINO_DIR = /usr/share/arduino
 include /usr/share/arduino/Arduino.mk
+include ./Arduino.mk
