@@ -21,8 +21,14 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#ifndef RADIOCOUNT
+#define RADIOCOUNT 1
+#endif
+
 // buffer can contain max 128 changes/pulse lengths
-#define RX_SIZE 128 
+//#define RX_SIZE 128 
+#define RX_SIZE 400 
+
 
 
 class RFtrx {
@@ -57,13 +63,13 @@ static void receiveInterruptA();
 	
 
 private:
-static bool activedata[3];
-static bool glitch[3];
+static bool activedata[RADIOCOUNT];
+static bool glitch[RADIOCOUNT];
 
-  static unsigned long volatile rxbuffer[3][ RX_SIZE +4 ];
-  static  unsigned int rxhead[3];
-  static  unsigned int rxtail[3];
-  static  unsigned int rxenable[3];
+  static unsigned long volatile rxbuffer[RADIOCOUNT][ RX_SIZE +4 ];
+  static  unsigned int rxhead[RADIOCOUNT];
+  static  unsigned int rxtail[RADIOCOUNT];
+  static  unsigned int rxenable[RADIOCOUNT];
 
    
   
@@ -75,9 +81,9 @@ static   unsigned long minPeriodLength;
 
   
 //static unsigned long currentTime;
-static unsigned long lastTime[3];
-static unsigned long lastTime2;
-static unsigned long lastTime3;
+static unsigned long lastTime[ RADIOCOUNT ];
+//static unsigned long lastTime2;
+//static unsigned long lastTime3;
 
 };
 

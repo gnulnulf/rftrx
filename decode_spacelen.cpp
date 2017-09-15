@@ -98,7 +98,7 @@ int decode_spacelen( String &spacelenFrame ) {
 
 	
 	if ( framelen == 21 ) {
-		Serial.print("ATIremote:");
+		Serial.print(F("ATIremote:"));
 		/* from the kernel source:
 		 * Each remote can be configured to transmit on one channel as follows:
 		 *   - Press and hold the "hand icon" button.  
@@ -106,11 +106,11 @@ int decode_spacelen( String &spacelenFrame ) {
 		 *   - When it stops blinking, input the channel code as two digits, from 01 
 		 *     to 16, and press the hand icon again.
 		*/
-		String match="---------------------";
+		String match=F("---------------------");
 		// f = first transmission (0=repeat)
 		// k = keycode
 		// i = channel/index
-		String data= "fkkkkkkkkkkkkkkkkiiii";
+		String data=F( "fkkkkkkkkkkkkkkkkiiii");
                 Serial.print("IDX=");
                 Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
                 Serial.print(";KEY=");
@@ -126,11 +126,11 @@ int decode_spacelen( String &spacelenFrame ) {
 
 
 	if ( framelen == 32 ) {
-		Serial.print("Auriol:");
+		Serial.print(F("Auriol:"));
 //#        echo SPACELEN weather Auriol
   //      # IIII IIII UUUU TTTT TTTT TTTT  CCCC CCCC
    //     # index     bat? temp            checksum?
-		String data="iiiiiiiiuuuuttttttttttttcccccccc";
+		String data=F("iiiiiiiiuuuuttttttttttttcccccccc");
                 Serial.print("IDX=");
                 Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
                 Serial.print(";TEMP=");
@@ -146,18 +146,18 @@ int decode_spacelen( String &spacelenFrame ) {
 }
 
         if ( framelen == 34 ) {
-                Serial.print("TempHum:");
-                String match="---------tt----------------------";
-                String data="iiiiiibbcctttttttttttteeeeehhhhhhh";
-                Serial.print("IDX=");
+                Serial.print(F("TempHum:"));
+                String match=F("---------tt----------------------");
+                String data=F("iiiiiibbcctttttttttttteeeeehhhhhhh");
+                Serial.print(F("IDX="));
                 Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
-                Serial.print(";TEMP=");
+                Serial.print(F(";TEMP="));
                 Serial.print( getsignedbinfromframe( 't', spacelenFrame, data,0));
-                Serial.print(";HUM=");
+                Serial.print(F(";HUM="));
                 Serial.print( getbinfromframe( 'h', spacelenFrame, data,0));
-                Serial.print(";BAT=");
+                Serial.print(F(";BAT="));
                 Serial.print( getbinfromframe( 'b', spacelenFrame, data,0));
-                Serial.print(";CHAN=");
+                Serial.print(F(";CHAN="));
                 Serial.print( getbinfromframe( 'c', spacelenFrame, data,0));
                 Serial.println();
 
@@ -165,18 +165,18 @@ int decode_spacelen( String &spacelenFrame ) {
         }       //34
 
 	if ( framelen == 36 ) {
-		Serial.print("TempHum:");
-		String match="-----------tt----------------------";
-		String data="--iiiiiibbcctttttttttttteeeeehhhhhhh";
-		Serial.print("IDX=");
+		Serial.print(F("TempHum:"));
+		String match=F("-----------tt----------------------");
+		String data=F("--iiiiiibbcctttttttttttteeeeehhhhhhh");
+		Serial.print(F("IDX="));
 		Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
-		Serial.print(";TEMP=");
+		Serial.print(F(";TEMP="));
 		Serial.print( getsignedbinfromframe( 't', spacelenFrame, data,0));
-		Serial.print(";HUM=");
+		Serial.print(F(";HUM="));
 		Serial.print( getbinfromframe( 'h', spacelenFrame, data,0));
-		Serial.print(";BAT=");
+		Serial.print(F(";BAT="));
 		Serial.print( getbinfromframe( 'b', spacelenFrame, data,0));
-		Serial.print(";CHAN=");
+		Serial.print(F(";CHAN="));
 		Serial.print( getbinfromframe( 'c', spacelenFrame, data,0));
 		Serial.println();
 
@@ -198,9 +198,9 @@ newkaku 00FBC8B2	10
                   00 1000 0101 1000 0101  0110 1110  0  0  0010
                    0    8    5    8    5     6    e  G  O     2(ch 3)
 */
-		String match1="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii10oouuuuuuuu";
-		String match2="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii01oouuuuuuuu";
-		String data="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu";
+		String match1=F("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii10oouuuuuuuu");
+		String match2=F("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii01oouuuuuuuu");
+		String data=F("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu");
 		Serial.print("Newkaku:");
 		Serial.print("IDX=");
                 Serial.print( gettritsbinfromframe( 'i',0,0,1,0, spacelenFrame, data,0),HEX);
@@ -232,17 +232,17 @@ newkaku 00FBC8B2        10
                   00 1000 0101 1000 0101  0110 1110  0  0  0010
                    0    8    5    8    5     6    e  G  O     2(ch 3)
 */
-		String match="----------------------------------------------------11------------------";
-		String data="iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu";
-                Serial.print("NewkakuDim:");
-		Serial.print("IDX=");
+		String match=F("----------------------------------------------------11------------------");
+		String data=F("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiggoouuuuuuuu");
+                Serial.print(F("NewkakuDim:"));
+		Serial.print(F("IDX="));
                 Serial.print( gettritsbinfromframe( 'i',0,0,1,0, spacelenFrame, data,0),HEX);
-		Serial.print(" GROUP=");
+		Serial.print(F(" GROUP="));
                 Serial.print( gettritsbinfromframe( 'g',0,0,1,0, spacelenFrame, data,0));
-		Serial.print(" STATE=DIM");
-		Serial.print(" UNIT=");
+		Serial.print(F(" STATE=DIM"));
+		Serial.print(F(" UNIT="));
                 Serial.print( gettritsbinfromframe( 'u',0,0,1,0, spacelenFrame, data,0) +1);
-		Serial.print(" DIM=");
+		Serial.print(F(" DIM="));
                 Serial.print( gettritsbinfromframe( 'd',0,0,1,0, spacelenFrame, data,0) );
                 Serial.println();
 
@@ -252,7 +252,7 @@ newkaku 00FBC8B2        10
 
 
 	if ( framelen == 88 ) {
-		Serial.print("Weather:");
+		Serial.print(F("Weather:"));
 /*
 #    abc: device identifier
 #    def: temperature
@@ -270,16 +270,16 @@ newkaku 00FBC8B2        10
 01111111101010111110001001010100 596-400 / 10 = 19,6
 1000000001010100000111011010101111000001111111111111111111111111101011101111001101011010
 */
-		String data="--------iiiiiiiiiiiitttttttttttthhhhhhhhwwwwwwwwggggggggmmmmrrrrssssssssbbbbddddcccccccc";
-		                Serial.print("IDX=");
+		String data=F("--------iiiiiiiiiiiitttttttttttthhhhhhhhwwwwwwwwggggggggmmmmrrrrssssssssbbbbddddcccccccc");
+		                Serial.print(F("IDX="));
                 Serial.print( getbinfromframe( 'i', spacelenFrame, data,0));
-                Serial.print(";TEMP=");
+                Serial.print(F(";TEMP="));
                 Serial.print( getbinfromframeinverted( 't', spacelenFrame, data,0) -400);
-                Serial.print(";HUM=");
+                Serial.print(F(";HUM="));
                 Serial.print( getbinfromframeinverted( 'h', spacelenFrame, data,0));
-                Serial.print(";BAT=");
+                Serial.print(F(";BAT="));
                 Serial.print( getbinfromframeinverted( 'b', spacelenFrame, data,0));
-                Serial.print(";WIND=");
+                Serial.print(F(";WIND="));
                 Serial.print( getbinfromframeinverted( 'g', spacelenFrame, data,0));
                 Serial.println();
 

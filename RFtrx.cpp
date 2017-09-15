@@ -16,10 +16,12 @@
 #include "RFtrx.h"
 
 
-unsigned int RFtrx::rxtail[3]={0,0,0};
-unsigned int RFtrx::rxenable[3]={0,0,0};
-unsigned int RFtrx::rxhead[3]={0,0,0};
-unsigned long RFtrx::lastTime[3]={0,0,0};
+
+
+unsigned int RFtrx::rxtail[ RADIOCOUNT ];
+unsigned int RFtrx::rxenable[ RADIOCOUNT ];
+unsigned int RFtrx::rxhead[ RADIOCOUNT ];
+unsigned long RFtrx::lastTime[ RADIOCOUNT ];
 
 
 //unsigned long RFtrx::minStartLength=2500;
@@ -32,9 +34,9 @@ unsigned long RFtrx::maxStartLength=20000;
 unsigned long RFtrx::minPeriodLength=100;
 unsigned long RFtrx::maxPeriodLength=3600;
 
-bool RFtrx::activedata[3]={0,0,0};
-bool RFtrx::glitch[3]={0,0,0};
-unsigned long volatile RFtrx::rxbuffer[3][ RX_SIZE +4 ];
+bool RFtrx::activedata[ RADIOCOUNT ];
+bool RFtrx::glitch[ RADIOCOUNT ];
+unsigned long volatile RFtrx::rxbuffer[ RADIOCOUNT ][ RX_SIZE +4 ];
 
 
 
@@ -49,6 +51,18 @@ unsigned long volatile RFtrx::rxbuffer[3][ RX_SIZE +4 ];
 	//maxStartLength=20000;
 	//setMinPeriodLength(150);
 	//setMaxPeriodLength(2000);
+
+for ( int i=0; i<RADIOCOUNT ; i++) {
+ RFtrx::activedata[ i ]=0;
+ RFtrx::glitch[ i ]=0;
+ RFtrx::rxtail[ i ]=0;
+RFtrx::rxenable[ i ]=0;
+RFtrx::rxhead[ i ]=0;
+RFtrx::lastTime[ i ]=0;
+  
+}
+
+ 
  }
  
  void RFtrx::initInterrupt(int vector,int channel=0) {
@@ -101,11 +115,11 @@ void RFtrx::setMaxPeriodLength( unsigned long length ) {maxPeriodLength = length
 long RFtrx::getNext(int channel=0)  {
 	long r=-1;
 	if ( rxhead[ channel] == rxtail[ channel] ) {
-		Serial.println("ERROR NO DATA READY");
+		Serial.println(F("ERROR NO DATA READY"));
 	} else {
 		r=rxbuffer[ channel ][ rxtail[ channel] ];
 		rxtail[ channel]++;
-		if ( rxtail[ channel] > RX_SIZE ) rxtail[ channel]=0;
+		if ( rxtail[ channel] >= RX_SIZE ) rxtail[ channel]=0;
 	}
 	return r;
 }	
@@ -157,7 +171,7 @@ void RFtrx::receiveInterrupt(int channel=0) {
 		// do we need to know it was a large pulse?
 		RFtrx::rxbuffer[ channel][RFtrx::rxhead[ channel]]= 0;
 		RFtrx::rxhead[ channel]++;
-		if ( RFtrx::rxhead[ channel] > RX_SIZE ) RFtrx::rxhead[ channel]=0;
+		if ( RFtrx::rxhead[ channel] >= RX_SIZE ) RFtrx::rxhead[ channel]=0;
 		if ( RFtrx::rxhead[ channel] == RFtrx::rxtail[ channel] ) {
 			//overflow
 		}
@@ -175,7 +189,7 @@ void RFtrx::receiveInterrupt(int channel=0) {
 		RFtrx::activedata[ channel]=1;
 		RFtrx::rxbuffer[ channel][RFtrx::rxhead[ channel]]= 0;
 		RFtrx::rxhead[ channel]++;
-		if ( RFtrx::rxhead[ channel] > RX_SIZE ) RFtrx::rxhead[ channel]=0;
+		if ( RFtrx::rxhead[ channel] >= RX_SIZE ) RFtrx::rxhead[ channel]=0;
 		if ( RFtrx::rxhead[ channel] == RFtrx::rxtail[ channel] ) {
 			//overflow
 		}
@@ -187,7 +201,7 @@ void RFtrx::receiveInterrupt(int channel=0) {
 
 	RFtrx::rxbuffer[ channel][RFtrx::rxhead[ channel]]= duration;
 	RFtrx::rxhead[ channel]++;
-	if ( RFtrx::rxhead[ channel] > RX_SIZE ) RFtrx::rxhead[ channel]=0;
+	if ( RFtrx::rxhead[ channel] >= RX_SIZE ) RFtrx::rxhead[ channel]=0;
 	if ( RFtrx::rxhead[ channel] == RFtrx::rxtail[ channel] ) {
 		//overflow
 	}
@@ -222,7 +236,7 @@ void RFtrx::receiveInterruptA() {
 				RFtrx::activedata[0]=0;
 	RFtrx::rxbuffer[0][RFtrx::rxhead[0]]= 0;
 	RFtrx::rxhead[0]++;
-	if ( RFtrx::rxhead[0] > RX_SIZE ) RFtrx::rxhead[0]=0;
+	if ( RFtrx::rxhead[0] >= RX_SIZE ) RFtrx::rxhead[0]=0;
 	if ( RFtrx::rxhead[0] == RFtrx::rxtail[0] ) {
 		//overflow
 
@@ -244,7 +258,7 @@ void RFtrx::receiveInterruptA() {
 			RFtrx::activedata[0]=1;
 	RFtrx::rxbuffer[0][RFtrx::rxhead[0]]= 0;
 	RFtrx::rxhead[0]++;
-	if ( RFtrx::rxhead[0] > RX_SIZE ) RFtrx::rxhead[0]=0;
+	if ( RFtrx::rxhead[0] >= RX_SIZE ) RFtrx::rxhead[0]=0;
 	if ( RFtrx::rxhead[0] == RFtrx::rxtail[0] ) {
 		//overflow
 
@@ -263,7 +277,7 @@ void RFtrx::receiveInterruptA() {
 
 	RFtrx::rxbuffer[0][RFtrx::rxhead[0]]= duration;
 	RFtrx::rxhead[0]++;
-	if ( RFtrx::rxhead[0] > RX_SIZE ) RFtrx::rxhead[0]=0;
+	if ( RFtrx::rxhead[0] >= RX_SIZE ) RFtrx::rxhead[0]=0;
 	if ( RFtrx::rxhead[0] == RFtrx::rxtail[0] ) {
 		//overflow
 
