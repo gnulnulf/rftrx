@@ -5,7 +5,7 @@
 
 void setupRadios();
 
-#define RADIOCOUNT 2
+#define RADIOCOUNT 3
 
 #if RADIOCOUNT > 0
 #define RADIO1ACTIVE

@@ -52,7 +52,7 @@ unsigned long RFreceive::lastTime[ RADIOCOUNT ];
 
 unsigned long RFreceive::minStartLength=1000;
 unsigned long RFreceive::maxStartLength=20000;
-unsigned long RFreceive::minPeriodLength=100;
+unsigned long RFreceive::minPeriodLength=90;
 unsigned long RFreceive::maxPeriodLength=3600;
 
 bool RFreceive::activedata[ RADIOCOUNT ];
