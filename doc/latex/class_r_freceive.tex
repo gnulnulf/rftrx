@@ -1,0 +1,66 @@
+\hypertarget{class_r_freceive}{}\section{R\+Freceive Class Reference}
+\label{class_r_freceive}\index{R\+Freceive@{R\+Freceive}}
+
+
+{\ttfamily \#include $<$R\+Freceive.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_r_freceive_a1449b9fc5ca1c08869eadd3990d9236c}\label{class_r_freceive_a1449b9fc5ca1c08869eadd3990d9236c}} 
+void \mbox{\hyperlink{class_r_freceive_a1449b9fc5ca1c08869eadd3990d9236c}{init\+Interrupt}} (int vector, int channel)
+\begin{DoxyCompactList}\small\item\em initialize the interrupt \char`\"{}vector\char`\"{} for RX \char`\"{}channel\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_afb1e852bcae003d5d119debc4e73a2eb}\label{class_r_freceive_afb1e852bcae003d5d119debc4e73a2eb}} 
+void \mbox{\hyperlink{class_r_freceive_afb1e852bcae003d5d119debc4e73a2eb}{enable\+Receive}} (int channel)
+\begin{DoxyCompactList}\small\item\em enable interrupt for \char`\"{}channel\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_ab8b545efe94b82be8d1feef08c29340d}\label{class_r_freceive_ab8b545efe94b82be8d1feef08c29340d}} 
+void \mbox{\hyperlink{class_r_freceive_ab8b545efe94b82be8d1feef08c29340d}{disable\+Receive}} (int channel)
+\begin{DoxyCompactList}\small\item\em disable interrupt for \char`\"{}channel\char`\"{} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a2d3c05696fabff62bdc06e1feedadc48}\label{class_r_freceive_a2d3c05696fabff62bdc06e1feedadc48}} 
+bool {\bfseries dataready} (int channel)
+\item 
+\mbox{\Hypertarget{class_r_freceive_a19e27dbf9e597c8df7fd0ba5ebcddcb4}\label{class_r_freceive_a19e27dbf9e597c8df7fd0ba5ebcddcb4}} 
+long {\bfseries get\+Next} (int channel)
+\item 
+\mbox{\Hypertarget{class_r_freceive_af36972eab4c5f65cb96ee4e4742235fb}\label{class_r_freceive_af36972eab4c5f65cb96ee4e4742235fb}} 
+int {\bfseries data\+Count} (int channel)
+\item 
+\mbox{\Hypertarget{class_r_freceive_a761b46a7746f9b570f7377bfc65d4746}\label{class_r_freceive_a761b46a7746f9b570f7377bfc65d4746}} 
+void {\bfseries set\+Min\+Start\+Length} (unsigned long length)
+\item 
+\mbox{\Hypertarget{class_r_freceive_aa56392ddcc63456ae7429b3b6224d2b7}\label{class_r_freceive_aa56392ddcc63456ae7429b3b6224d2b7}} 
+void {\bfseries set\+Max\+Start\+Length} (unsigned long length)
+\item 
+\mbox{\Hypertarget{class_r_freceive_a75ecab73fcfeb13218a1f59c2f51dd0f}\label{class_r_freceive_a75ecab73fcfeb13218a1f59c2f51dd0f}} 
+void {\bfseries set\+Min\+Period\+Length} (unsigned long length)
+\item 
+\mbox{\Hypertarget{class_r_freceive_a64119e6557d3e1c53111870d241a5abe}\label{class_r_freceive_a64119e6557d3e1c53111870d241a5abe}} 
+void {\bfseries set\+Max\+Period\+Length} (unsigned long length)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_r_freceive_accecae78a1b37c6374ef287f2169aa65}\label{class_r_freceive_accecae78a1b37c6374ef287f2169aa65}} 
+static void \mbox{\hyperlink{class_r_freceive_accecae78a1b37c6374ef287f2169aa65}{receive\+Interrupt}} (int channel)
+\begin{DoxyCompactList}\small\item\em shared part of the receive interrupt \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a1f1c4ecbbafe17d4bebe3faedd9a6450}\label{class_r_freceive_a1f1c4ecbbafe17d4bebe3faedd9a6450}} 
+static void \mbox{\hyperlink{class_r_freceive_a1f1c4ecbbafe17d4bebe3faedd9a6450}{receive\+Interrupt\+Channel0}} ()
+\begin{DoxyCompactList}\small\item\em channel 0 routine to attach to the interrupt vector \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_aeb586b7bb9cb2c30ea4fa2b70e4e4a61}\label{class_r_freceive_aeb586b7bb9cb2c30ea4fa2b70e4e4a61}} 
+static void \mbox{\hyperlink{class_r_freceive_aeb586b7bb9cb2c30ea4fa2b70e4e4a61}{receive\+Interrupt\+Channel1}} ()
+\begin{DoxyCompactList}\small\item\em channel 1 routine to attach to the interrupt vector \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a630b264c2715e88e950671b5e60fb283}\label{class_r_freceive_a630b264c2715e88e950671b5e60fb283}} 
+static void \mbox{\hyperlink{class_r_freceive_a630b264c2715e88e950671b5e60fb283}{receive\+Interrupt\+Channel2}} ()
+\begin{DoxyCompactList}\small\item\em channel 2 routine to attach to the interrupt vector \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a6d80c25ebc975f71a4c9ec52b81df778}\label{class_r_freceive_a6d80c25ebc975f71a4c9ec52b81df778}} 
+static void \mbox{\hyperlink{class_r_freceive_a6d80c25ebc975f71a4c9ec52b81df778}{receive\+InterruptA}} ()
+\begin{DoxyCompactList}\small\item\em placeholder for old receiver interrupt \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_r_freceive}{R\+Freceive}} contains the interrupt routines for receiving frames it is also used to communicate with the parsing software 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+R\+Freceive.\+h\item 
+R\+Freceive.\+cpp\end{DoxyCompactItemize}

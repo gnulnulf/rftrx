@@ -1,25 +1,36 @@
-/*
- * RFreceive library v1.0 for Arduino
- * 
- * This library receives and sends RF,IR signals. No protocol decoding is done here.
- * 
- * Copyright 2015 by Arco van Geest <arco@appeltaart.mine.nu>
- *
- * The purpose of this library is to send and recieve data in manchester or spacelength to support all sort of domotic signals. 
- *
- * 20150107 Initial version
- * 20151007 join functions with channel selector
- * 
- * License: GPLv3. See license.txt
+/**
+ @brief RFreceive library for Arduino
+ @version 1.0
+ @author Arco van Geest <arco@appeltaart.mine.nu>
+ @copyright 2015-2018 Arco van Geest <arco@appeltaart.mine.nu> All right reserved.
+  rftrx is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  rftrx is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with rftrx.  If not, see <http://www.gnu.org/licenses/>.
+ @license  GPLv3. See license.txt
+ @details
+  This library receives and sends RF,IR signals. No protocol decoding is done here.
+
+  The purpose of this library is to send and recieve data in manchester or spacelength to support all sort of domotic signals. 
+
+ @date 20150107 Initial version
+ @date 20151007 join functions with channel selector
+ @date 20180408 start of cleanup and migrate to different glitch algoritm
  */
  
 //#include "RFreceive.h"
 #include "rftrx.h"
 
-//create the 
+//create the class
 RFreceive myrx = RFreceive();
 
-
+// depending on the radiocount the receiver and count arrays are configured
 long frame[ RADIOCOUNT ][ FRAMESIZE ];
 #if RADIOCOUNT==3
 String receiver[3]={RECEIVER1,RECEIVER2,RECEIVER3};
@@ -33,11 +44,6 @@ int count[ 2 ]={0,0};
 String receiver[1]={RECEIVER1};
 int count[ 1 ]={0};
 #endif
-
-
-
-
-
 
 unsigned int RFreceive::rxtail[ RADIOCOUNT ];
 unsigned int RFreceive::rxenable[ RADIOCOUNT ];
@@ -61,9 +67,9 @@ unsigned long volatile RFreceive::rxbuffer[ RADIOCOUNT ][ RX_SIZE +4 ];
 
 
 
- //constructor
- RFreceive::RFreceive() {
-//  Serial.println("RFreceive constructor");
+//constructor
+RFreceive::RFreceive() {
+  //  Serial.println("RFreceive constructor");
   //long currentTime=micros();
   //lastTime=micros();
   //rxtail=0;
@@ -73,46 +79,43 @@ unsigned long volatile RFreceive::rxbuffer[ RADIOCOUNT ][ RX_SIZE +4 ];
   //setMinPeriodLength(150);
   //setMaxPeriodLength(2000);
 
-for ( int i=0; i<RADIOCOUNT ; i++) {
- RFreceive::activedata[ i ]=0;
- RFreceive::glitch[ i ]=0;
- RFreceive::rxtail[ i ]=0;
-RFreceive::rxenable[ i ]=0;
-RFreceive::rxhead[ i ]=0;
-RFreceive::lastTime[ i ]=0;
+  for ( int i=0; i<RADIOCOUNT ; i++) {
+    RFreceive::activedata[ i ]=0;
+    RFreceive::glitch[ i ]=0;
+    RFreceive::rxtail[ i ]=0;
+    RFreceive::rxenable[ i ]=0;
+    RFreceive::rxhead[ i ]=0;
+    RFreceive::lastTime[ i ]=0;
+  } 
+}  //end constructor
+
+// setters
+void RFreceive::setMinStartLength( unsigned long length ) {minStartLength = length;}
+void RFreceive::setMaxStartLength( unsigned long length ) {maxStartLength = length;}
   
-}
+void RFreceive::setMinPeriodLength( unsigned long length ) {minPeriodLength = length;}
+void RFreceive::setMaxPeriodLength( unsigned long length ) {maxPeriodLength = length;}
 
- 
- }
- 
- void RFreceive::initInterrupt(int vector,int channel=0) {
- if ( channel == 0)     attachInterrupt(vector, receiveInterruptChannel0, CHANGE);
- if ( channel == 1)     attachInterrupt(vector, receiveInterruptChannel1, CHANGE);
- if ( channel == 2)     attachInterrupt(vector, receiveInterruptChannel2, CHANGE);
-
-//  Serial.println("RFreceive init");
-//    attachInterrupt(0, receiveInterrupt, CHANGE);
-  
-}
-
-
+//! attach the vector dependend receiver code to the vector
+void RFreceive::initInterrupt(int vector,int channel=0) {
+  if ( channel == 0)     attachInterrupt(vector, receiveInterruptChannel0, CHANGE);
+  if ( channel == 1)     attachInterrupt(vector, receiveInterruptChannel1, CHANGE);
+  if ( channel == 2)     attachInterrupt(vector, receiveInterruptChannel2, CHANGE);
+  //  Serial.println("RFreceive init");
+  //    attachInterrupt(0, receiveInterrupt, CHANGE);
+} // end RFreceive::initInterrupt
 
 void RFreceive::enableReceive(int channel=0) {
   rxenable[ channel] =1;
-  //Serial.print("+");
-}
+} // end RFreceive::enableReceive
 
 void RFreceive::disableReceive(int channel=0) {
-  //Serial.print("-");
   rxenable[ channel] =0;
-}
-
+} // end RFreceive::disableReceive
 
 bool RFreceive::dataready(int channel=0)  {
     return (( rxhead[channel] == rxtail[channel] ) ?false:true );
-}
-
+} // end RFreceive::dataready
 
 int RFreceive::dataCount(int channel=0) {
   if ( rxhead[ channel] == rxtail[ channel]) return 0;
@@ -121,21 +124,13 @@ int RFreceive::dataCount(int channel=0) {
   } else {
     return RX_SIZE+rxhead[ channel]-rxtail[ channel];
   }
-}
+} // end RFreceive::dataCount
 
 
 String getReturnstring( RFframe &f ){
-                        String r=">"+f.receiver+":"+f.count+":"+f.startperiod+":"+f.period+":"+f.reldata+"#";
+  String r=">"+f.receiver+":"+f.count+":"+f.startperiod+":"+f.period+":"+f.reldata+"#";
   return r;
-  }
-
-
-  
-void RFreceive::setMinStartLength( unsigned long length ) {minStartLength = length;}
-void RFreceive::setMaxStartLength( unsigned long length ) {maxStartLength = length;}
-  
-void RFreceive::setMinPeriodLength( unsigned long length ) {minPeriodLength = length;}
-void RFreceive::setMaxPeriodLength( unsigned long length ) {maxPeriodLength = length;}
+} // end getReturnstring
   
 long RFreceive::getNext(int channel=0)  {
   long r=-1;
@@ -147,19 +142,19 @@ long RFreceive::getNext(int channel=0)  {
     if ( rxtail[ channel] >= RX_SIZE ) rxtail[ channel]=0;
   }
   return r;
-} 
+} //end RFreceive::getNext
 
 void RFreceive::receiveInterruptChannel0() {
   if ( rxenable[0] == 1 ) RFreceive::receiveInterrupt(0);
-}
+} // end RFreceive::receiveInterruptChannel0 
 
 void RFreceive::receiveInterruptChannel1() {
    if ( rxenable[1] == 1 ) RFreceive::receiveInterrupt(1);
-}
+} // end RFreceive::receiveInterruptChannel1
 
 void RFreceive::receiveInterruptChannel2() {
    if ( rxenable[2] == 1 ) RFreceive::receiveInterrupt(2);
-}
+} // end RFreceive::receiveInterruptChannel2
 
 // receive a frame flank for channel n
 void RFreceive::receiveInterrupt(int channel=0) {
@@ -233,7 +228,8 @@ void RFreceive::receiveInterrupt(int channel=0) {
   //Serial.println(duration);
   //digitalWrite(13,digitalRead(2));
   RFreceive::lastTime[ channel]=currentTime;
-}
+} // end RFreceive::receiveInterrupt 
+
 
 void RFreceive::receiveInterruptA() {
   long  currentTime=micros();
@@ -401,10 +397,9 @@ p = frame[channel][i] / ( period - 5 );
 } //einde addparse
 
 
-
 void appendAndParseFrame(RFframe &dest, int channel, long d)/*NOPROTO*/ {
-        dest.returnstring="";
-    if ( d == 0 ) {
+  dest.returnstring="";
+  if ( d == 0 ) {
     if (( count[ channel ] > MIN_FRAMESIZE ) ) {
       long period=frame[ channel ][0];
       long high=frame[ channel ][0];
@@ -421,26 +416,26 @@ void appendAndParseFrame(RFframe &dest, int channel, long d)/*NOPROTO*/ {
       avg /= count[ channel ];
 
 
-// indien er minder dan 10% 1-periods zijn zal dat wel fout zijn
-int countLow=0;
-for (int i=0;i<count[ channel ];i++) {
-        if ((( frame[ channel ][i] + period * 0.5 ) / period ) ==1 ) countLow++;
-}
-if (countLow< (count[channel] / 10)) {
-long lowAvg=0;
-int lowCount=0;
-//Serial.println("LOW ERROR");
-//      period*= 1.5;
-for (int i=0;i<count[ channel ];i++) {
+  // indien er minder dan 10% 1-periods zijn zal dat wel fout zijn
+  int countLow=0;
+  for (int i=0;i<count[ channel ];i++) {
+    if ((( frame[ channel ][i] + period * 0.5 ) / period ) ==1 ) countLow++;
+  }
+  if (countLow< (count[channel] / 10)) {
+  long lowAvg=0;
+  int lowCount=0;
+  //Serial.println("LOW ERROR");
+  //      period*= 1.5;
+  for (int i=0;i<count[ channel ];i++) {
         if ( frame[ channel ][i]  < period * 2 ) {
         lowAvg+= frame[ channel ][i];
         lowCount++;
         }
-}
-// use the average of the small
-// half periods...
-//period = (lowAvg / lowCount)/2;
-period = (lowAvg / lowCount);
+  }
+  // use the average of the small
+  // half periods...
+  //period = (lowAvg / lowCount)/2;
+  period = (lowAvg / lowCount);
 }
 
 
@@ -495,7 +490,7 @@ p = frame[channel][i] / ( period - 5 );
       count[ channel ]=0;
     }
   }
-} //einde addparseframe
+} //end addparseframe
 
 
 
