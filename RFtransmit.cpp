@@ -2,11 +2,11 @@
 #include "rftrx.h"
 
 void setupTX(){
+  // still a dummy 
   Serial.println("Setup transmit hardware");
-
-
-  
 }
+
+
 int sendframe(RFframe &frame,int channel, int repeat){
   int length = frame.data.length();
     Serial.print("Send FRAME on radio ");

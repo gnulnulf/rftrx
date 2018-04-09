@@ -92,6 +92,7 @@ class RFreceive {
   private:
     //! data collecting is active
     static bool activedata[RADIOCOUNT];
+    
     //! a glitch is active
     static bool glitch[RADIOCOUNT];
 

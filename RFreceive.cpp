@@ -50,7 +50,6 @@ unsigned int RFreceive::rxenable[ RADIOCOUNT ];
 unsigned int RFreceive::rxhead[ RADIOCOUNT ];
 unsigned long RFreceive::lastTime[ RADIOCOUNT ];
 
-
 //unsigned long RFreceive::minStartLength=2500;
 //unsigned long RFreceive::maxStartLength=20000;
 //unsigned long RFreceive::minPeriodLength=200;
@@ -65,8 +64,6 @@ bool RFreceive::activedata[ RADIOCOUNT ];
 bool RFreceive::glitch[ RADIOCOUNT ];
 unsigned long volatile RFreceive::rxbuffer[ RADIOCOUNT ][ RX_SIZE +4 ];
 
-
-
 //constructor
 RFreceive::RFreceive() {
   //  Serial.println("RFreceive constructor");
@@ -79,6 +76,7 @@ RFreceive::RFreceive() {
   //setMinPeriodLength(150);
   //setMaxPeriodLength(2000);
 
+  //reset frame arrays  
   for ( int i=0; i<RADIOCOUNT ; i++) {
     RFreceive::activedata[ i ]=0;
     RFreceive::glitch[ i ]=0;
@@ -97,6 +95,9 @@ void RFreceive::setMinPeriodLength( unsigned long length ) {minPeriodLength = le
 void RFreceive::setMaxPeriodLength( unsigned long length ) {maxPeriodLength = length;}
 
 //! attach the vector dependend receiver code to the vector
+// I don't know if this can be done different.
+//! @param vector arduino interrupt number  
+//! @param channel Channel number (0-3)
 void RFreceive::initInterrupt(int vector,int channel=0) {
   if ( channel == 0)     attachInterrupt(vector, receiveInterruptChannel0, CHANGE);
   if ( channel == 1)     attachInterrupt(vector, receiveInterruptChannel1, CHANGE);
@@ -105,18 +106,28 @@ void RFreceive::initInterrupt(int vector,int channel=0) {
   //    attachInterrupt(0, receiveInterrupt, CHANGE);
 } // end RFreceive::initInterrupt
 
+//! enable receiving for channel
+//! @param channel Channel number (0-3)
 void RFreceive::enableReceive(int channel=0) {
   rxenable[ channel] =1;
 } // end RFreceive::enableReceive
 
+//! disable receiving for channel
+//! @param channel Channel number (0-3)
 void RFreceive::disableReceive(int channel=0) {
   rxenable[ channel] =0;
 } // end RFreceive::disableReceive
 
+//! Is data ready for channel
+//! @param channel Channel number (0-3)
+//! @return bool data ready
 bool RFreceive::dataready(int channel=0)  {
     return (( rxhead[channel] == rxtail[channel] ) ?false:true );
 } // end RFreceive::dataready
 
+//! get amount of data items ready
+//! @param channel Channel number (0-3)
+//! @return int count of data ready
 int RFreceive::dataCount(int channel=0) {
   if ( rxhead[ channel] == rxtail[ channel]) return 0;
   if ( rxhead[ channel] > rxtail[ channel] ) {
@@ -127,11 +138,17 @@ int RFreceive::dataCount(int channel=0) {
 } // end RFreceive::dataCount
 
 
+//! get string of ascii representation for the RFframe 
+//! @param &f refrence to RF frame
+//! @return String of ascii frame data
 String getReturnstring( RFframe &f ){
   String r=">"+f.receiver+":"+f.count+":"+f.startperiod+":"+f.period+":"+f.reldata+"#";
   return r;
 } // end getReturnstring
   
+//! get next data item
+//! @param channel Channel number (0-3)
+//! @return long data value
 long RFreceive::getNext(int channel=0)  {
   long r=-1;
   if ( rxhead[ channel] == rxtail[ channel] ) {
@@ -144,19 +161,24 @@ long RFreceive::getNext(int channel=0)  {
   return r;
 } //end RFreceive::getNext
 
+//! Interrupt Routine specific for radio 0 
 void RFreceive::receiveInterruptChannel0() {
   if ( rxenable[0] == 1 ) RFreceive::receiveInterrupt(0);
 } // end RFreceive::receiveInterruptChannel0 
 
+//! Interrupt Routine specific for radio 1
 void RFreceive::receiveInterruptChannel1() {
    if ( rxenable[1] == 1 ) RFreceive::receiveInterrupt(1);
 } // end RFreceive::receiveInterruptChannel1
 
+//! Interrupt Routine specific for radio 2 
 void RFreceive::receiveInterruptChannel2() {
    if ( rxenable[2] == 1 ) RFreceive::receiveInterrupt(2);
 } // end RFreceive::receiveInterruptChannel2
 
-// receive a frame flank for channel n
+//! receive a frame flank for channel n
+//! This is the shared part of the interrupt routines 
+//! @param channel Channel number (0-3)
 void RFreceive::receiveInterrupt(int channel=0) {
   long  currentTime=micros();
   

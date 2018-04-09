@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['initinterrupt',['initInterrupt',['../class_r_freceive.html#a1449b9fc5ca1c08869eadd3990d9236c',1,'RFreceive']]],
-  ['intcommand',['intCommand',['../structint_command.html',1,'']]]
+  ['getnext',['getNext',['../class_r_freceive.html#a19e27dbf9e597c8df7fd0ba5ebcddcb4',1,'RFreceive']]]
 ];
