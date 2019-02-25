@@ -5,8 +5,6 @@
 
 void setupRadios();
 
-#define RADIOCOUNT 2
-
 #if RADIOCOUNT > 0
 #define RADIO1ACTIVE
 
@@ -35,7 +33,6 @@ void setupRadios();
 //#define RECEIVER1_TYPE RX_TYP_IR
 #endif
 
-
 #define TRANSMITTER1 "433A"
 #define TRANSMITTER1_DATA 14
 #define TRANSMITTER1_VCC 15
@@ -45,8 +42,5 @@ void setupRadios();
 #define TRANSMITTER3_DATA 17
 //#define TRANSMITTER3_VCC 
 //#define TRANSMITTER3_TYPE TX_TYP_IR
-
-
-
 
 #endif

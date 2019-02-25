@@ -1,0 +1,208 @@
+\hypertarget{class_r_freceive}{}\section{R\+Freceive Class Reference}
+\label{class_r_freceive}\index{R\+Freceive@{R\+Freceive}}
+
+
+{\ttfamily \#include $<$R\+Freceive.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_r_freceive_a1449b9fc5ca1c08869eadd3990d9236c}{init\+Interrupt}} (int vector, int channel)
+\begin{DoxyCompactList}\small\item\em initialize the interrupt \char`\"{}vector\char`\"{} for RX \char`\"{}channel\char`\"{} \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_r_freceive_afb1e852bcae003d5d119debc4e73a2eb}{enable\+Receive}} (int channel)
+\begin{DoxyCompactList}\small\item\em enable interrupt for \char`\"{}channel\char`\"{} \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_r_freceive_ab8b545efe94b82be8d1feef08c29340d}{disable\+Receive}} (int channel)
+\begin{DoxyCompactList}\small\item\em disable interrupt for \char`\"{}channel\char`\"{} \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_r_freceive_a2d3c05696fabff62bdc06e1feedadc48}{dataready}} (int channel)
+\begin{DoxyCompactList}\small\item\em check if data is ready for parsing \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_r_freceive_a19e27dbf9e597c8df7fd0ba5ebcddcb4}{get\+Next}} (int channel)
+\begin{DoxyCompactList}\small\item\em get next data \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_r_freceive_af36972eab4c5f65cb96ee4e4742235fb}{data\+Count}} (int channel)
+\begin{DoxyCompactList}\small\item\em return datacount \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a761b46a7746f9b570f7377bfc65d4746}\label{class_r_freceive_a761b46a7746f9b570f7377bfc65d4746}} 
+void \mbox{\hyperlink{class_r_freceive_a761b46a7746f9b570f7377bfc65d4746}{set\+Min\+Start\+Length}} (unsigned long length)
+\begin{DoxyCompactList}\small\item\em set the minimum startlength \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_aa56392ddcc63456ae7429b3b6224d2b7}\label{class_r_freceive_aa56392ddcc63456ae7429b3b6224d2b7}} 
+void \mbox{\hyperlink{class_r_freceive_aa56392ddcc63456ae7429b3b6224d2b7}{set\+Max\+Start\+Length}} (unsigned long length)
+\begin{DoxyCompactList}\small\item\em set the maximum startlength \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a75ecab73fcfeb13218a1f59c2f51dd0f}\label{class_r_freceive_a75ecab73fcfeb13218a1f59c2f51dd0f}} 
+void \mbox{\hyperlink{class_r_freceive_a75ecab73fcfeb13218a1f59c2f51dd0f}{set\+Min\+Period\+Length}} (unsigned long length)
+\begin{DoxyCompactList}\small\item\em set the minimum periodlength, probably 100+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a64119e6557d3e1c53111870d241a5abe}\label{class_r_freceive_a64119e6557d3e1c53111870d241a5abe}} 
+void \mbox{\hyperlink{class_r_freceive_a64119e6557d3e1c53111870d241a5abe}{set\+Max\+Period\+Length}} (unsigned long length)
+\begin{DoxyCompactList}\small\item\em set the maximum periodlength, should be below minstartlength \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_r_freceive_accecae78a1b37c6374ef287f2169aa65}{receive\+Interrupt}} (int channel)
+\begin{DoxyCompactList}\small\item\em shared part of the receive interrupt \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_r_freceive_a1f1c4ecbbafe17d4bebe3faedd9a6450}{receive\+Interrupt\+Channel0}} ()
+\begin{DoxyCompactList}\small\item\em channel 0 routine to attach to the interrupt vector \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_r_freceive_aeb586b7bb9cb2c30ea4fa2b70e4e4a61}{receive\+Interrupt\+Channel1}} ()
+\begin{DoxyCompactList}\small\item\em channel 1 routine to attach to the interrupt vector \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_r_freceive_a630b264c2715e88e950671b5e60fb283}{receive\+Interrupt\+Channel2}} ()
+\begin{DoxyCompactList}\small\item\em channel 2 routine to attach to the interrupt vector \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_freceive_a6d80c25ebc975f71a4c9ec52b81df778}\label{class_r_freceive_a6d80c25ebc975f71a4c9ec52b81df778}} 
+static void \mbox{\hyperlink{class_r_freceive_a6d80c25ebc975f71a4c9ec52b81df778}{receive\+InterruptA}} ()
+\begin{DoxyCompactList}\small\item\em placeholder for old receiver interrupt \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\mbox{\hyperlink{class_r_freceive}{R\+Freceive}} contains the interrupt routines for receiving frames it is also used to communicate with the parsing software 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_r_freceive_af36972eab4c5f65cb96ee4e4742235fb}\label{class_r_freceive_af36972eab4c5f65cb96ee4e4742235fb}} 
+\index{R\+Freceive@{R\+Freceive}!data\+Count@{data\+Count}}
+\index{data\+Count@{data\+Count}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{data\+Count()}{dataCount()}}
+{\footnotesize\ttfamily int R\+Freceive\+::data\+Count (\begin{DoxyParamCaption}\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+return datacount 
+
+get amount of data items ready 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int count of data ready 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_freceive_a2d3c05696fabff62bdc06e1feedadc48}\label{class_r_freceive_a2d3c05696fabff62bdc06e1feedadc48}} 
+\index{R\+Freceive@{R\+Freceive}!dataready@{dataready}}
+\index{dataready@{dataready}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{dataready()}{dataready()}}
+{\footnotesize\ttfamily bool R\+Freceive\+::dataready (\begin{DoxyParamCaption}\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+check if data is ready for parsing 
+
+Is data ready for channel 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool data ready 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_freceive_ab8b545efe94b82be8d1feef08c29340d}\label{class_r_freceive_ab8b545efe94b82be8d1feef08c29340d}} 
+\index{R\+Freceive@{R\+Freceive}!disable\+Receive@{disable\+Receive}}
+\index{disable\+Receive@{disable\+Receive}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{disable\+Receive()}{disableReceive()}}
+{\footnotesize\ttfamily void R\+Freceive\+::disable\+Receive (\begin{DoxyParamCaption}\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+disable interrupt for \char`\"{}channel\char`\"{} 
+
+disable receiving for channel 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_r_freceive_afb1e852bcae003d5d119debc4e73a2eb}\label{class_r_freceive_afb1e852bcae003d5d119debc4e73a2eb}} 
+\index{R\+Freceive@{R\+Freceive}!enable\+Receive@{enable\+Receive}}
+\index{enable\+Receive@{enable\+Receive}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{enable\+Receive()}{enableReceive()}}
+{\footnotesize\ttfamily void R\+Freceive\+::enable\+Receive (\begin{DoxyParamCaption}\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+enable interrupt for \char`\"{}channel\char`\"{} 
+
+enable receiving for channel 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_r_freceive_a19e27dbf9e597c8df7fd0ba5ebcddcb4}\label{class_r_freceive_a19e27dbf9e597c8df7fd0ba5ebcddcb4}} 
+\index{R\+Freceive@{R\+Freceive}!get\+Next@{get\+Next}}
+\index{get\+Next@{get\+Next}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{get\+Next()}{getNext()}}
+{\footnotesize\ttfamily long R\+Freceive\+::get\+Next (\begin{DoxyParamCaption}\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+get next data 
+
+get next data item 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+long data value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_freceive_a1449b9fc5ca1c08869eadd3990d9236c}\label{class_r_freceive_a1449b9fc5ca1c08869eadd3990d9236c}} 
+\index{R\+Freceive@{R\+Freceive}!init\+Interrupt@{init\+Interrupt}}
+\index{init\+Interrupt@{init\+Interrupt}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{init\+Interrupt()}{initInterrupt()}}
+{\footnotesize\ttfamily void R\+Freceive\+::init\+Interrupt (\begin{DoxyParamCaption}\item[{int}]{vector,  }\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+initialize the interrupt \char`\"{}vector\char`\"{} for RX \char`\"{}channel\char`\"{} 
+
+attach the vector dependend receiver code to the vector
+
+
+\begin{DoxyParams}{Parameters}
+{\em vector} & arduino interrupt number ~\newline
+\\
+\hline
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_r_freceive_accecae78a1b37c6374ef287f2169aa65}\label{class_r_freceive_accecae78a1b37c6374ef287f2169aa65}} 
+\index{R\+Freceive@{R\+Freceive}!receive\+Interrupt@{receive\+Interrupt}}
+\index{receive\+Interrupt@{receive\+Interrupt}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{receive\+Interrupt()}{receiveInterrupt()}}
+{\footnotesize\ttfamily void R\+Freceive\+::receive\+Interrupt (\begin{DoxyParamCaption}\item[{int}]{channel = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+shared part of the receive interrupt 
+
+receive a frame flank for channel n This is the shared part of the interrupt routines 
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel number (0-\/3) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_r_freceive_a1f1c4ecbbafe17d4bebe3faedd9a6450}\label{class_r_freceive_a1f1c4ecbbafe17d4bebe3faedd9a6450}} 
+\index{R\+Freceive@{R\+Freceive}!receive\+Interrupt\+Channel0@{receive\+Interrupt\+Channel0}}
+\index{receive\+Interrupt\+Channel0@{receive\+Interrupt\+Channel0}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{receive\+Interrupt\+Channel0()}{receiveInterruptChannel0()}}
+{\footnotesize\ttfamily void R\+Freceive\+::receive\+Interrupt\+Channel0 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+channel 0 routine to attach to the interrupt vector 
+
+Interrupt Routine specific for radio 0. \mbox{\Hypertarget{class_r_freceive_aeb586b7bb9cb2c30ea4fa2b70e4e4a61}\label{class_r_freceive_aeb586b7bb9cb2c30ea4fa2b70e4e4a61}} 
+\index{R\+Freceive@{R\+Freceive}!receive\+Interrupt\+Channel1@{receive\+Interrupt\+Channel1}}
+\index{receive\+Interrupt\+Channel1@{receive\+Interrupt\+Channel1}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{receive\+Interrupt\+Channel1()}{receiveInterruptChannel1()}}
+{\footnotesize\ttfamily void R\+Freceive\+::receive\+Interrupt\+Channel1 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+channel 1 routine to attach to the interrupt vector 
+
+Interrupt Routine specific for radio 1. \mbox{\Hypertarget{class_r_freceive_a630b264c2715e88e950671b5e60fb283}\label{class_r_freceive_a630b264c2715e88e950671b5e60fb283}} 
+\index{R\+Freceive@{R\+Freceive}!receive\+Interrupt\+Channel2@{receive\+Interrupt\+Channel2}}
+\index{receive\+Interrupt\+Channel2@{receive\+Interrupt\+Channel2}!R\+Freceive@{R\+Freceive}}
+\subsubsection{\texorpdfstring{receive\+Interrupt\+Channel2()}{receiveInterruptChannel2()}}
+{\footnotesize\ttfamily void R\+Freceive\+::receive\+Interrupt\+Channel2 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+channel 2 routine to attach to the interrupt vector 
+
+Interrupt Routine specific for radio 2. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+R\+Freceive.\+h\item 
+R\+Freceive.\+cpp\end{DoxyCompactItemize}
