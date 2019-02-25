@@ -49,7 +49,7 @@ void setup() {
   setupTX();
 
   myrx.enableReceive( 0 );
-//  myrx.enableReceive( 1 );
+  myrx.enableReceive( 1 );
   //myrx.disableReceive( 0 );
  // myrx.disableReceive( 1 );
 

@@ -6,8 +6,9 @@ BOARD_TAG = mega2560
 ARDUINO_PORT = /dev/ttyUSB0
 RECEIVER = \"433A\"
 
-BOARD_TAG = mega
+#BOARD_TAG = mega
 #ARDUINO_PORT = /dev/ttyUSB0
+ARDUINO_PORT = /dev/ttyACM1
 #RECEIVER = \"433A\"
 
 #AVRDUDE_ARD_PROGRAMMER = wiring

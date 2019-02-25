@@ -2,7 +2,7 @@
 #define _RFTRX_H
 
 #define BVERSION "20170915"
-#define RADIOCOUNT 1 
+//#define RADIOCOUNT 1 
 
 
 #define RFLINK

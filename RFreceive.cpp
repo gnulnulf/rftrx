@@ -16,6 +16,8 @@
 //#include "RFreceive.h"
 #include "rftrx.h"
 
+#define NEWGLITCH
+
 //create the 
 RFreceive myrx = RFreceive();
 
@@ -52,11 +54,14 @@ unsigned long RFreceive::lastTime[ RADIOCOUNT ];
 
 unsigned long RFreceive::minStartLength=1000;
 unsigned long RFreceive::maxStartLength=20000;
-unsigned long RFreceive::minPeriodLength=90;
+unsigned long RFreceive::minPeriodLength=400;
 unsigned long RFreceive::maxPeriodLength=3600;
 
+bool RFreceive::pin[ RADIOCOUNT ];
 bool RFreceive::activedata[ RADIOCOUNT ];
 bool RFreceive::glitch[ RADIOCOUNT ];
+
+signed long RFreceive::filter[ RADIOCOUNT ];
 unsigned long volatile RFreceive::rxbuffer[ RADIOCOUNT ][ RX_SIZE +4 ];
 
 
@@ -150,15 +155,25 @@ long RFreceive::getNext(int channel=0)  {
 } 
 
 void RFreceive::receiveInterruptChannel0() {
-  if ( rxenable[0] == 1 ) RFreceive::receiveInterrupt(0);
+  if ( rxenable[0] == 1 ) {
+	RFreceive::receiveInterrupt(0);
+	RFreceive::pin[0] = ( PORTD & 0x00000100) ;
+	
+	}
 }
 
 void RFreceive::receiveInterruptChannel1() {
-   if ( rxenable[1] == 1 ) RFreceive::receiveInterrupt(1);
+   if ( rxenable[1] == 1 ) {
+	RFreceive::receiveInterrupt(1);
+	RFreceive::pin[1] = ( PORTE & 0x00010000) ;
+	}
 }
 
 void RFreceive::receiveInterruptChannel2() {
-   if ( rxenable[2] == 1 ) RFreceive::receiveInterrupt(2);
+   if ( rxenable[2] == 1 ) {
+	RFreceive::receiveInterrupt(2);
+	RFreceive::pin[2] = ( PORTJ & 0x00000010) ;
+	}
 }
 
 // receive a frame flank for channel n
@@ -176,13 +191,36 @@ void RFreceive::receiveInterrupt(int channel=0) {
   // the duration of the pulse or space
   word duration=currentTime - RFreceive::lastTime[ channel];
   
-  //if the pulse is too short it's probably a glitch
-  if (duration < RFreceive::minPeriodLength) {
+#ifdef NEWGLITCH
+	if (RFreceive::pin[ channel ]) {
+		RFreceive::filter[ channel ] += duration;
+	} else {
+		RFreceive::filter[ channel ] -= duration;
+	}
+  if ((RFreceive::filter[ channel ] < RFreceive::minPeriodLength) && (RFreceive::filter[ channel ] > 0)) {
     // no spikes
     glitch[ channel]=1;
     return;
   }
   
+        if (RFreceive::pin[ channel ]) {
+                duration = RFreceive::filter[ channel ];
+		RFreceive::filter[ channel ] = RFreceive::minPeriodLength;
+        } else {
+                duration = - RFreceive::filter[ channel ] + RFreceive::minPeriodLength ;
+		RFreceive::filter[ channel ] = 0;
+        }
+
+#endif
+#ifndef NEWGLITCH
+  //if the pulse is too short it's probably a glitch
+  if (duration < RFreceive::minPeriodLength) {
+    // no spikes
+    glitch[ channel]=1;
+    return;
+}
+
+#endif
   // glitch stops at first normal length
   if ( glitch[ channel] == 1 ) {
     //end of spike.

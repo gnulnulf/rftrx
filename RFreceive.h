@@ -69,6 +69,9 @@ static void receiveInterruptA();
 private:
 static bool activedata[RADIOCOUNT];
 static bool glitch[RADIOCOUNT];
+static bool pin[RADIOCOUNT];
+static signed long filter[ RADIOCOUNT ];
+
 
   static unsigned long volatile rxbuffer[RADIOCOUNT][ RX_SIZE +4 ];
   static  unsigned int rxhead[RADIOCOUNT];
