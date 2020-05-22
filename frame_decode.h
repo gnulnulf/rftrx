@@ -23,7 +23,7 @@
 #include <avr/interrupt.h>
 
 
-#define FRAMESIZE 350
+#define FRAMESIZE 520
 //#define FRAMESIZE (RX_SIZE/2)
 #define MIN_FRAMESIZE 24
 #define SPACELEN_TOLERANCE 5
@@ -32,9 +32,13 @@
 #define PROTO_1214 2
 #define PROTO_1331 3
 #define PROTO_TRITS 4
+#define PROTO_NRZ 5
+#define PROTO_NRZI 6
+#define PROTO_RZUNI 7
+#define PROTO_MANCHESTER 8
 
 
-#define PROTO_COUNT 5
+#define PROTO_COUNT 8
 
 
 //array min_period, max_period, count, max_count, array of matches, &handler 

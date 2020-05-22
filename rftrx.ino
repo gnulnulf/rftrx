@@ -55,7 +55,6 @@ void setup() {
 
   // enable first receiver
   myrx.enableReceive( 0 );
-  myrx.enableReceive( 1 );
 
   // enable second receiver
   //  myrx.enableReceive( 1 );
@@ -63,7 +62,7 @@ void setup() {
   // enable third receiver
   //  myrx.enableReceive( 2);
 
-  //myrx.disableReceive( 0 );
+//  myrx.disableReceive( 0 );
  // myrx.disableReceive( 1 );
 
  // send a frame

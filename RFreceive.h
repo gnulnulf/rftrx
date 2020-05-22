@@ -38,7 +38,7 @@
 //! a RX buffer can contain max 128 changes/pulse lengths
 //! this is mainly limitted by the small amount of memory in an arduino
 //#define RX_SIZE 128 
-#define RX_SIZE 200 
+#define RX_SIZE 320 
 
 
 void appendAndParseFrame(RFframe &f , int channel, long d);

@@ -28,7 +28,7 @@
 #ifndef _RFTRX_H
 #define _RFTRX_H
 
-#define BVERSION "20170915"
+#define BVERSION "20200305"
 #define RADIOCOUNT 1
 
 

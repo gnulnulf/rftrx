@@ -5,6 +5,7 @@ inspired by a lot but especially:
 https://bitbucket.org/fuzzillogic/433mhzforarduino/wiki/Home
 http://www.nodo-domotica.nl/
 http://www.nemcon.nl/blog2/
+https://github.com/merbanan/rtl_433
 
 Based on the idea pulses are relative to each other and protocols are quite the same for multiple vendors.
 
@@ -22,7 +23,7 @@ when a frame is received the following will happen:
 	----aaaabbccccccccccc--
 	this will create an associative array, probably with signing and crc etc.
 
-a frame could be send by sending  strings containing relative pulses and extra information like pulselength, repeats etc.
+a frame could be send by sending strings containing relative pulses and extra information like pulselength, repeats etc.
  
 
 usage
@@ -35,3 +36,10 @@ make upload
 
 To view from the command line I use:
 screen -F /dev/ttyUSB0 57600
+
+to send a command from screen you can use ctrl-J to enter.
+help[crl-J]
+rxdisable 0[ctrl-J]
+rxdisable 1[ctrl-J]
+rxenable 0[ctrl-J]
+rxenable 1[ctrl-J]

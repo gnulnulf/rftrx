@@ -5,6 +5,8 @@
 
 void setupRadios();
 
+// due to the new glitch test data pins cannot be changed!
+
 #if RADIOCOUNT > 0
 #define RADIO1ACTIVE
 

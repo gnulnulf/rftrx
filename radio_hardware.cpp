@@ -12,9 +12,8 @@ pinMode(RECEIVER1_DATA, INPUT_PULLUP);
 
 #ifdef RADIO2ACTIVE
 
-pinMode(RECEIVER2_VCC, OUTPUT);
 pinMode(RECEIVER2_GAIN, OUTPUT);
-pinMode(4, OUTPUT);  //receiver2 enable
+pinMode(RECEIVER2_VCC, OUTPUT);  //receiver2 enable
 digitalWrite(RECEIVER2_VCC,HIGH); //receiver2 on
 pinMode(RECEIVER2_DATA, INPUT_PULLUP);
 

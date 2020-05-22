@@ -8,7 +8,7 @@ RECEIVER = \"433A\"
 
 #BOARD_TAG = mega
 #ARDUINO_PORT = /dev/ttyUSB0
-ARDUINO_PORT = /dev/ttyACM1
+ARDUINO_PORT = /dev/ttyACM0
 #RECEIVER = \"433A\"
 
 #AVRDUDE_ARD_PROGRAMMER = wiring

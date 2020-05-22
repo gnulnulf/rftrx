@@ -27,7 +27,7 @@
 //#include "RFreceive.h"
 #include "rftrx.h"
 
-#define NEWGLITCH
+//#define NEWGLITCH
 
 //create the class
 RFreceive myrx = RFreceive();
@@ -59,8 +59,8 @@ unsigned long RFreceive::lastTime[ RADIOCOUNT ];
 
 unsigned long RFreceive::minStartLength=1000;
 unsigned long RFreceive::maxStartLength=20000;
-unsigned long RFreceive::minPeriodLength=400;
-unsigned long RFreceive::maxPeriodLength=3600;
+unsigned long RFreceive::minPeriodLength=95;
+unsigned long RFreceive::maxPeriodLength=4000;
 
 bool RFreceive::pin[ RADIOCOUNT ];
 bool RFreceive::activedata[ RADIOCOUNT ];
@@ -169,8 +169,8 @@ long RFreceive::getNext(int channel=0)  {
 //! Interrupt Routine specific for radio 0 
 void RFreceive::receiveInterruptChannel0() {
   if ( rxenable[0] == 1 ) {
+	RFreceive::pin[0] = ( PORTD & 1<<2) ;
 	RFreceive::receiveInterrupt(0);
-	RFreceive::pin[0] = ( PORTD & 0x00000100) ;
 	
 	}
 } // end RFreceive::receiveInterruptChannel0 
@@ -178,16 +178,17 @@ void RFreceive::receiveInterruptChannel0() {
 //! Interrupt Routine specific for radio 1
 void RFreceive::receiveInterruptChannel1() {
    if ( rxenable[1] == 1 ) {
-	RFreceive::receiveInterrupt(1);
+//	RFreceive::pin[1] = ( PORTE & 1<<4 ) ;
 	RFreceive::pin[1] = ( PORTE & 0x00010000) ;
+	RFreceive::receiveInterrupt(1);
 	}
 } // end RFreceive::receiveInterruptChannel1
 
 //! Interrupt Routine specific for radio 2 
 void RFreceive::receiveInterruptChannel2() {
    if ( rxenable[2] == 1 ) {
+	RFreceive::pin[2] = ( PORTJ & 1<<1) ;
 	RFreceive::receiveInterrupt(2);
-	RFreceive::pin[2] = ( PORTJ & 0x00000010) ;
 	}
 } // end RFreceive::receiveInterruptChannel2
 

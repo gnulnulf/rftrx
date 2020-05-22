@@ -216,6 +216,34 @@ int r = decode_1331( data1331 );
 }
 } // end_1331
 
+// raw bits
+char current='1';
+String rawframe="";
+
+ for (int i = 1; i<dataLen;i++) {
+    char c = frame.charAt( startOfData + i );
+	int w = 0;
+	if ( c<'A' ) w=c-'0';
+	if ( c>='a' ) w=c-'a';
+
+	for(int bitcount=0; bitcount<w;bitcount++){
+		rawframe+=current;
+
+	}
+	current=(current=='0')?'1':'0';
+ }
+	
+
+Serial.print( F("  RAW:") );
+Serial.print( rawframe.length() );
+Serial.print( ":" );
+Serial.print( rawframe );
+Serial.println( );
+
+
+
+// end raw
+
 // if more then half of the pulses have the same lenght it's probably a spacer
 if ( pulses[ commonPulse ] > ( (dataLen - SPACELEN_TOLERANCE)/2) ) {
 //Serial.print( "spacelen test odd" );
